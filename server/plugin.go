@@ -604,7 +604,7 @@ func (p *Plugin) HasGroupHook(ctx context.Context, user *gitlab.UserInfo, namesp
 func (p *Plugin) checkAndRefreshToken(token *oauth2.Token) (*oauth2.Token, error) {
 	// If there is only one minute left for the token to expire, we are refreshing the token.
 	// The detailed reason for this can be found here: https://github.com/golang/oauth2/issues/84#issuecomment-831492464
-	// We don't the want the token to expire between the time when we decide that the old token is valid
+	// We don't want the token to expire between the time when we decide that the old token is valid
 	// and the time at which we create the request. We are handling that by not letting the token expire.
 	if time.Until(token.Expiry) <= 1*time.Minute {
 		conf := p.getOAuthConfig()
@@ -614,7 +614,6 @@ func (p *Plugin) checkAndRefreshToken(token *oauth2.Token) (*oauth2.Token, error
 			return nil, errors.Wrap(err, "unable to get the new refreshed token")
 		}
 		if newToken.AccessToken != token.AccessToken {
-			newToken.Expiry = time.Now().Add(1 * time.Minute)
 			return newToken, nil
 		}
 	}
