@@ -281,7 +281,7 @@ func (p *Plugin) getGitlabUserInfoByMattermostID(userID string) (*gitlab.UserInf
 
 	if newToken != nil {
 		userInfo.Token = newToken
-		unencryptedToken := newToken.AccessToken // needed because the storeGitlabUserInfo method changes its value to an encrypted value
+		unencryptedToken = newToken.AccessToken // needed because the storeGitlabUserInfo method changes its value to an encrypted value
 		if err := p.storeGitlabUserInfo(&userInfo); err != nil {
 			return nil, &APIErrorResponse{ID: "", Message: fmt.Sprintf("Unable to store user info. Error: %s", err.Error()), StatusCode: http.StatusInternalServerError}
 		}
