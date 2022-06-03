@@ -61,7 +61,7 @@ export default class SidebarRight extends React.PureComponent<PropTypes> {
             case RHSStates.PRS:
                 gitlabItems = this.props.yourPrs;
                 title = 'Your Open Merge Requests';
-                listUrl = `${baseURL} /dashboard/merge_requests?state=opened&scope=all&author_username=${this.props.username}&archived=false'${orgQuery}`;
+                listUrl = `${baseURL}/dashboard/merge_requests?state=opened&scope=all&author_username=${this.props.username}&archived=false'${orgQuery}`;
                 break;
             case RHSStates.REVIEWS:
                 gitlabItems = this.props.reviews;

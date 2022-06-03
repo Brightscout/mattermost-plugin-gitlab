@@ -5,7 +5,20 @@ import * as CSS from 'csstype';
 import {GitPullRequestIcon, IssueOpenedIcon, IconProps} from '@primer/octicons-react';
 import SignIcon from '../../images/icons/sign';
 import {formatTimeSince} from '../../utils/date_utils';
-import {GitlabItemsProps, Label, notificationReasons} from "../../types/gitlab_items"
+import {GitlabItemsProps, Label} from "../../types/gitlab_items"
+
+export const notificationReasons: Record<string, string> = {
+  assigned: 'You were assigned to the issue/merge request',
+  review_requested: 'You were requested to review a merge request.',
+  mentioned: 'You were specifically @mentioned in the content.',
+  build_failed: 'Gitlab build was failed.',
+  marked: 'Task is marked as done.',
+  approval_required: 'Your approval is required on this issue/merge request.',
+  unmergeable: 'This merge request can not be merged.',
+  directly_addressed: 'You were directly addressed.',
+  merge_train_removed: 'A merge train was removed.',
+  attention_required: 'Your attention is required on the issue/merge request.',
+};
 
 function GitlabItems({item, theme}: GitlabItemsProps) {
     const style = getStyle(theme);
@@ -125,7 +138,7 @@ const getStyle = makeStyleFromTheme((theme) => {
             alignItems: 'center',
             marginRight: '6px',
         },
-        iconSucsess: {
+        iconSuccess: {
             color: theme.onlineIndicator,
         },
         iconPending: {
