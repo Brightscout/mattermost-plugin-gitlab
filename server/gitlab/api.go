@@ -16,6 +16,11 @@ const (
 	scopeAll         = "all"
 )
 
+type GitlabMergeRequest struct {
+	*internGitlab.MergeRequest
+	LabelsWithDetails []*internGitlab.Label `json:"labels_with_details,omitempty"`
+}
+
 // NewGroupHook creates a webhook associated with a GitLab group
 func (g *gitlab) NewGroupHook(ctx context.Context, user *UserInfo, groupName string, webhookOptions *AddWebhookOptions) (*WebhookInfo, error) {
 	client, err := g.gitlabConnect(*user.Token)
@@ -244,11 +249,6 @@ func (g *gitlab) GetProject(ctx context.Context, user *UserInfo, owner, repo str
 	}
 
 	return result, nil
-}
-
-type GitlabMergeRequest struct {
-	*internGitlab.MergeRequest
-	LabelsWithDetails []*internGitlab.Label `json:"labels_with_details,omitempty"`
 }
 
 func (g *gitlab) GetReviews(ctx context.Context, user *UserInfo) ([]*GitlabMergeRequest, error) {
