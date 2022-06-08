@@ -99,10 +99,10 @@ func (mr *MockGitlabMockRecorder) GetProjectHooks(arg0, arg1, arg2, arg3 interfa
 }
 
 // GetReviews mocks base method.
-func (m *MockGitlab) GetReviews(arg0 context.Context, arg1 *gitlab.UserInfo) ([]*gitlab.GitlabMergeRequest, error) {
+func (m *MockGitlab) GetReviews(arg0 context.Context, arg1 *gitlab.UserInfo) ([]*gitlab.MergeRequest, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetReviews", arg0, arg1)
-	ret0, _ := ret[0].([]*gitlab.GitlabMergeRequest)
+	ret0, _ := ret[0].([]*gitlab.MergeRequest)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -144,10 +144,10 @@ func (mr *MockGitlabMockRecorder) GetUserDetails(arg0, arg1 interface{}) *gomock
 }
 
 // GetYourAssignments mocks base method.
-func (m *MockGitlab) GetYourAssignments(arg0 context.Context, arg1 *gitlab.UserInfo) ([]*gitlab0.Issue, error) {
+func (m *MockGitlab) GetYourAssignments(arg0 context.Context, arg1 *gitlab.UserInfo) ([]*gitlab.Issue, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetYourAssignments", arg0, arg1)
-	ret0, _ := ret[0].([]*gitlab0.Issue)
+	ret0, _ := ret[0].([]*gitlab.Issue)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -174,10 +174,10 @@ func (mr *MockGitlabMockRecorder) GetYourPrDetails(arg0, arg1, arg2, arg3 interf
 }
 
 // GetYourPrs mocks base method.
-func (m *MockGitlab) GetYourPrs(arg0 context.Context, arg1 *gitlab.UserInfo) ([]*gitlab.GitlabMergeRequest, error) {
+func (m *MockGitlab) GetYourPrs(arg0 context.Context, arg1 *gitlab.UserInfo) ([]*gitlab.MergeRequest, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetYourPrs", arg0, arg1)
-	ret0, _ := ret[0].([]*gitlab.GitlabMergeRequest)
+	ret0, _ := ret[0].([]*gitlab.MergeRequest)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
