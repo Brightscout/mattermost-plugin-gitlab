@@ -26,7 +26,7 @@ type Gitlab interface {
 	GetProject(ctx context.Context, user *UserInfo, owner, repo string) (*internGitlab.Project, error)
 	GetReviews(ctx context.Context, user *UserInfo) ([]*MergeRequest, error)
 	GetYourPrs(ctx context.Context, user *UserInfo) ([]*MergeRequest, error)
-	GetYourAssignments(ctx context.Context, user *UserInfo) ([]*GitlabIssueRequest, error)
+	GetYourAssignments(ctx context.Context, user *UserInfo) ([]*Issue, error)
 	GetUnreads(ctx context.Context, user *UserInfo) ([]*internGitlab.Todo, error)
 	GetProjectHooks(ctx context.Context, user *UserInfo, owner string, repo string) ([]*WebhookInfo, error)
 	GetGroupHooks(ctx context.Context, user *UserInfo, owner string) ([]*WebhookInfo, error)

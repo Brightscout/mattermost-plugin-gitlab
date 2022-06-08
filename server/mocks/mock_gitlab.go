@@ -143,10 +143,10 @@ func (mr *MockGitlabMockRecorder) GetUserDetails(arg0, arg1 interface{}) *gomock
 }
 
 // GetYourAssignments mocks base method.
-func (m *MockGitlab) GetYourAssignments(arg0 context.Context, arg1 *gitlab.UserInfo) ([]*gitlab.GitlabIssueRequest, error) {
+func (m *MockGitlab) GetYourAssignments(arg0 context.Context, arg1 *gitlab.UserInfo) ([]*gitlab.Issue, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetYourAssignments", arg0, arg1)
-	ret0, _ := ret[0].([]*gitlab.GitlabIssueRequest)
+	ret0, _ := ret[0].([]*gitlab.Issue)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

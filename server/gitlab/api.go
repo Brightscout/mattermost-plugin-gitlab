@@ -21,7 +21,7 @@ type MergeRequest struct {
 	LabelsWithDetails []*internGitlab.Label `json:"labels_with_details,omitempty"`
 }
 
-type GitlabIssueRequest struct {
+type Issue struct {
 	*internGitlab.Issue
 	LabelsWithDetails []*internGitlab.Label `json:"labels_with_details,omitempty"`
 }
@@ -373,7 +373,7 @@ func (g *gitlab) GetLabelDetails(client *internGitlab.Client, pid int, labels in
 	return labelsWithDetails, nil
 }
 
-func (g *gitlab) GetYourAssignments(ctx context.Context, user *UserInfo) ([]*GitlabIssueRequest, error) {
+func (g *gitlab) GetYourAssignments(ctx context.Context, user *UserInfo) ([]*Issue, error) {
 	client, err := g.gitlabConnect(*user.Token)
 	if err != nil {
 		return nil, err
@@ -408,21 +408,21 @@ func (g *gitlab) GetYourAssignments(ctx context.Context, user *UserInfo) ([]*Git
 		return nil, err
 	}
 
-	var mergeRequests []*GitlabIssueRequest
+	var issues []*Issue
 	for _, res := range result {
 		if res.Labels != nil {
 			labelsWithDetails, err := g.GetLabelDetails(client, res.ProjectID, res.Labels)
 			if err != nil {
 				return nil, err
 			}
-			mergeRequest := &GitlabIssueRequest{
+			issue := &Issue{
 				Issue:             res,
 				LabelsWithDetails: labelsWithDetails,
 			}
-			mergeRequests = append(mergeRequests, mergeRequest)
+			issues = append(issues, issue)
 		}
 	}
-	return mergeRequests, nil
+	return issues, nil
 }
 
 func (g *gitlab) GetUnreads(ctx context.Context, user *UserInfo) ([]*internGitlab.Todo, error) {
