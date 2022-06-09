@@ -395,19 +395,17 @@ func (g *gitlab) GetYourPrDetails(ctx context.Context, log logger.Logger, user *
 		wg.Add(1)
 		go func(pid, iid int, sha string) {
 			defer wg.Done()
-			res, err := g.fetchYourPrDetails(ctx, client, pid, iid, sha)
-			if err != nil {
-				log.WithError(err).Warnf("Failed to fetch PR details")
-				return
+			res := g.fetchYourPrDetails(ctx, log, client, pid, iid, sha)
+			if res != nil {
+				result = append(result, res)
 			}
-			result = append(result, res)
 		}(pr.ProjectID, pr.IID, pr.SHA)
 	}
 	wg.Wait()
 	return result, nil
 }
 
-func (g *gitlab) fetchYourPrDetails(c context.Context, client *internGitlab.Client, pid, iid int, sha string) (*PRDetails, error) {
+func (g *gitlab) fetchYourPrDetails(c context.Context, log logger.Logger, client *internGitlab.Client, pid, iid int, sha string) *PRDetails {
 	var commitDetails *internGitlab.Commit
 	var approvalDetails *internGitlab.MergeRequestApprovals
 	var err error
@@ -417,33 +415,40 @@ func (g *gitlab) fetchYourPrDetails(c context.Context, client *internGitlab.Clie
 	go func() {
 		defer wg.Done()
 		commitDetails, resp, err = client.Commits.GetCommit(pid, sha, internGitlab.WithContext(c))
+		if respErr := checkResponse(resp); respErr != nil {
+			log.WithError(respErr).Warnf("Failed to fetch commit details for PR with project_id %d", pid)
+			return
+		}
+		if err != nil {
+			log.WithError(err).Warnf("Failed to fetch commit details for PR with project_id %d", pid)
+			return
+		}
 	}()
-	if respErr := checkResponse(resp); respErr != nil {
-		return nil, errors.Errorf("Failed to fetch commit details for PR with project_id %d", pid)
-	}
-	if err != nil {
-		return nil, errors.Errorf("Failed to fetch commit details for PR with project_id %d", pid)
-	}
 
 	wg.Add(1)
 	go func() {
 		defer wg.Done()
 		approvalDetails, resp, err = client.MergeRequestApprovals.GetConfiguration(pid, iid, internGitlab.WithContext(c))
+		if respErr := checkResponse(resp); respErr != nil {
+			log.WithError(respErr).Warnf("Failed to fetch approval details for PR with project_id %d", pid)
+			return
+		}
+		if err != nil {
+			log.WithError(err).Warnf("Failed to fetch approval details for PR with project_id %d", pid)
+			return
+		}
 	}()
-	if respErr := checkResponse(resp); respErr != nil {
-		return nil, errors.Errorf("Failed to fetch approval details for PR with project_id %d", pid)
-	}
-	if err != nil {
-		return nil, errors.Errorf("Failed to fetch approval details for PR with project_id %d", pid)
-	}
 
 	wg.Wait()
-	return &PRDetails{
-		ProjectID: pid,
-		SHA:       sha,
-		Status:    commitDetails.Status,
-		Approvers: len(approvalDetails.ApprovedBy),
-	}, nil
+	if commitDetails != nil && approvalDetails != nil {
+		return &PRDetails{
+			ProjectID: pid,
+			SHA:       sha,
+			Status:    commitDetails.Status,
+			Approvers: len(approvalDetails.ApprovedBy),
+		}
+	}
+	return nil
 }
 
 func (g *gitlab) GetYourAssignments(ctx context.Context, user *UserInfo) ([]*Issue, error) {

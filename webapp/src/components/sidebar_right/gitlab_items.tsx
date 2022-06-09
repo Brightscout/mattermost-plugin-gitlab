@@ -141,14 +141,17 @@ function GitlabItems({item, theme}: GitlabItemsProps) {
                 );
         }
     }
-        
-    const reviews = (
-      <div style={style.subtitle}>
-          <span className="light">
-              {`${item.approvers} out of ${item.total_reviewers} ${(item.total_reviewers>1 ? "reviews" : "review")} complete.`}
-          </span>
-      </div>
-    )
+
+    let reviews: JSX.Element | null = null;
+    if(item.total_reviewers && item.approvers){
+        reviews = (
+          <div style={style.subtitle}>
+              <span className="light">
+                  {`${item.approvers} out of ${item.total_reviewers} ${(item.total_reviewers>1 ? "reviews" : "review")} complete.`}
+              </span>
+          </div>
+        )
+    }
 
     return (
       <div key={item.id} style={style.container}>
