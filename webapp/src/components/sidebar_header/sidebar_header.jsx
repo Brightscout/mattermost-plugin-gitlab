@@ -13,7 +13,7 @@ export default class SidebarHeader extends React.PureComponent {
         if (!this.props.show) {
             return null;
         }
-    
+
         return (
             <SidebarButtons
                 theme={this.props.theme}
