@@ -395,10 +395,10 @@ func (g *gitlab) GetYourPrDetails(ctx context.Context, log logger.Logger, user *
 		wg.Add(1)
 		go func(pid, iid int, sha string) {
 			defer wg.Done()
-			res, err := g.fetchYourPrDetails(ctx, client, pid, sha, iid)
+			res, err := g.fetchYourPrDetails(ctx, client, pid, iid, sha)
 			if err != nil {
 				log.WithError(err).Warnf("Failed to fetch PR details")
-				return;
+				return
 			}
 			result = append(result, res)
 		}(pr.ProjectID, pr.IID, pr.SHA)
@@ -407,7 +407,7 @@ func (g *gitlab) GetYourPrDetails(ctx context.Context, log logger.Logger, user *
 	return result, nil
 }
 
-func (g *gitlab) fetchYourPrDetails(c context.Context, client *internGitlab.Client, pid int, sha string, iid int) (*PRDetails, error) {
+func (g *gitlab) fetchYourPrDetails(c context.Context, client *internGitlab.Client, pid, iid int, sha string) (*PRDetails, error) {
 	var commitDetails *internGitlab.Commit
 	var approvalDetails *internGitlab.MergeRequestApprovals
 	var err error
@@ -420,7 +420,6 @@ func (g *gitlab) fetchYourPrDetails(c context.Context, client *internGitlab.Clie
 	}()
 	if respErr := checkResponse(resp); respErr != nil {
 		return nil, errors.Errorf("Failed to fetch commit details for PR with project_id %d", pid)
-
 	}
 	if err != nil {
 		return nil, errors.Errorf("Failed to fetch commit details for PR with project_id %d", pid)

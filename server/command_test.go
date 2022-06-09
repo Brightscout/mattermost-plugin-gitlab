@@ -190,7 +190,7 @@ func TestListWebhookCommand(t *testing.T) {
 	for _, test := range listWebhookCommandTests {
 		t.Run(test.testName, func(t *testing.T) {
 			p := new(Plugin)
-			
+
 			mockCtrl := gomock.NewController(t)
 			mockedClient := mocks.NewMockGitlab(mockCtrl)
 
