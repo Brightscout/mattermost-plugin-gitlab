@@ -5,7 +5,7 @@ import {connect} from 'react-redux';
 
 import {bindActionCreators} from 'redux';
 
-import {getYourPrsDetails, getReviewsDetails} from '../../actions';
+import {getYourPrDetails, getReviewDetails} from '../../actions';
 import {id as pluginId} from '../../manifest';
 
 import SidebarRight from './sidebar_right.tsx';
@@ -38,8 +38,8 @@ function mapPrsToDetails(prs, details) {
 function mapStateToProps(state) {
     return {
         username: state[`plugins-${pluginId}`].username,
-        reviews: mapPrsToDetails(state[`plugins-${pluginId}`].yourPrs, state[`plugins-${pluginId}`].reviewsDetails),
-        yourPrs: mapPrsToDetails(state[`plugins-${pluginId}`].yourPrs, state[`plugins-${pluginId}`].yourPrsDetails),
+        reviews: mapPrsToDetails(state[`plugins-${pluginId}`].yourPrs, state[`plugins-${pluginId}`].reviewDetails),
+        yourPrs: mapPrsToDetails(state[`plugins-${pluginId}`].yourPrs, state[`plugins-${pluginId}`].yourPrDetails),
         yourAssignments: state[`plugins-${pluginId}`].yourAssignments,
         unreads: state[`plugins-${pluginId}`].unreads,
         org: state[`plugins-${pluginId}`].organization,
@@ -51,8 +51,8 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
     return {
         actions: bindActionCreators({
-            getYourPrsDetails,
-            getReviewsDetails,
+            getYourPrDetails,
+            getReviewDetails,
         }, dispatch),
     };
 }

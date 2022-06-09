@@ -82,12 +82,12 @@ export default class SidebarRight extends React.PureComponent<PropTypes> {
 
   componentDidMount() {
       if (this.props.yourPrs && this.props.rhsState === RHSStates.PRS) {
-          this.props.actions.getYourPrsDetails(
+          this.props.actions.getYourPrDetails(
               mapGitlabItemListToPrList(this.props.yourPrs),
           );
       }
       if (this.props.reviews && this.props.rhsState === RHSStates.REVIEWS) {
-          this.props.actions.getReviewsDetails(
+          this.props.actions.getReviewDetails(
               mapGitlabItemListToPrList(this.props.reviews),
           );
       }
@@ -103,7 +103,7 @@ export default class SidebarRight extends React.PureComponent<PropTypes> {
               prevProps.rhsState,
           )
       ) {
-          this.props.actions.getYourPrsDetails(
+          this.props.actions.getYourPrDetails(
               mapGitlabItemListToPrList(this.props.yourPrs),
           );
       }
@@ -117,7 +117,7 @@ export default class SidebarRight extends React.PureComponent<PropTypes> {
               prevProps.rhsState,
           )
       ) {
-          this.props.actions.getReviewsDetails(
+          this.props.actions.getReviewDetails(
               mapGitlabItemListToPrList(this.props.reviews),
           );
       }

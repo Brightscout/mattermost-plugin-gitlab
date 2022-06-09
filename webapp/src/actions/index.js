@@ -64,7 +64,7 @@ export function getReviews() {
     };
 }
 
-export function getReviewsDetails(prList) {
+export function getReviewDetails(prList) {
     return async (dispatch, getState) => {
         let data;
         try {
@@ -113,7 +113,7 @@ export function getYourPrs() {
     };
 }
 
-export function getYourPrsDetails(prList) {
+export function getYourPrDetails(prList) {
     return async (dispatch, getState) => {
         let data;
         try {

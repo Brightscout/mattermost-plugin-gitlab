@@ -369,9 +369,8 @@ func (g *gitlab) GetYourPrs(ctx context.Context, user *UserInfo) ([]*MergeReques
 
 func (g *gitlab) GetLabelDetails(client *internGitlab.Client, pid int, labels internGitlab.Labels) ([]*internGitlab.Label, error) {
 	var labelsWithDetails []*internGitlab.Label
-	var projectID interface{} = pid
 	for _, label := range labels {
-		labelWithDetails, resp, err := client.Labels.GetLabel(projectID, label)
+		labelWithDetails, resp, err := client.Labels.GetLabel(pid, label)
 		if respErr := checkResponse(resp); respErr != nil {
 			return nil, respErr
 		}
