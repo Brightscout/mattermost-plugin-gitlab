@@ -390,7 +390,7 @@ func TestMakeReplacements(t *testing.T) {
 }
 
 const (
-	baseURLPath = "/api/v4"
+	baseURLPath    = "/api/v4"
 	requestURLPath = "/api/v4/projects/mattermost/mattermost-server/repository/files/app/authentication.go"
 )
 
