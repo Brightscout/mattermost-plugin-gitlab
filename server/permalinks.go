@@ -30,22 +30,24 @@ const permalinkLineContext = 3
 type replacement struct {
 	index         int      // index of the permalink in the string
 	word          string   // the permalink
-	permalinkInfo struct { // holds the necessary metadata of a permalink
-		haswww string
-		commit string
-		user   string
-		repo   string
-		path   string
-		line   string
-	}
+	permalinkInfo
 }
 
-// getReplacements returns the permalink replacements that need to be performed
+type permalinkInfo struct { // holds the necessary metadata of a permalink
+	haswww string
+	commit string
+	user   string
+	repo   string
+	path   string
+	line   string
+}
+
+// getPermalinkReplacements returns the permalink replacements that need to be performed
 // on a message. The returned slice is sorted by the index in ascending order.
-func (p *Plugin) getReplacements(msg string) []replacement {
+func (p *Plugin) getPermalinkReplacements(msg string) []replacement {
 	// find the permalinks from the msg using a regex
-	matches := p.gitlabPermalinkRegex.FindAllStringSubmatch(msg, -1)
-	indices := p.gitlabPermalinkRegex.FindAllStringIndex(msg, -1)
+	matches := gitlabPermalinkRegex.FindAllStringSubmatch(msg, -1)
+	indices := gitlabPermalinkRegex.FindAllStringIndex(msg, -1)
 	var replacements []replacement
 	for i, m := range matches {
 		// have a limit on the number of replacements to do
@@ -63,7 +65,7 @@ func (p *Plugin) getReplacements(msg string) []replacement {
 			continue
 		}
 		// populate the permalinkInfo with the extracted groups of the regex
-		for j, name := range p.gitlabPermalinkRegex.SubexpNames() {
+		for j, name := range gitlabPermalinkRegex.SubexpNames() {
 			if j == 0 {
 				continue
 			}
@@ -95,7 +97,7 @@ func (p *Plugin) makeReplacements(msg string, replacements []replacement, glClie
 		r := replacements[i]
 		// quick bailout if the commit hash is not proper.
 		if _, err := hex.DecodeString(r.permalinkInfo.commit); err != nil {
-			p.API.LogError("bad git commit hash in permalink", "error", err.Error(), "hash", r.permalinkInfo.commit)
+			p.API.LogDebug("bad git commit hash in permalink", "error", err.Error(), "hash", r.permalinkInfo.commit)
 			continue
 		}
 
@@ -109,7 +111,7 @@ func (p *Plugin) makeReplacements(msg string, replacements []replacement, glClie
 		file, _, err := glClient.RepositoryFiles.GetFile(projectPath, r.permalinkInfo.path, &opts)
 		defer cancel()
 		if err != nil {
-			p.API.LogError("error while fetching file contents", "error", err.Error(), "path", r.permalinkInfo.path)
+			p.API.LogDebug("error while fetching file contents", "error", err.Error(), "path", r.permalinkInfo.path)
 			continue
 		}
 		// if this is not a file, ignore.
@@ -119,7 +121,7 @@ func (p *Plugin) makeReplacements(msg string, replacements []replacement, glClie
 		}
 		decoded, err := base64.StdEncoding.DecodeString(file.Content)
 		if err != nil {
-			p.API.LogError("error while decoding file contents", "error", err.Error(), "path", r.permalinkInfo.path)
+			p.API.LogDebug("error while decoding file contents", "error", err.Error(), "path", r.permalinkInfo.path)
 			continue
 		}
 
@@ -136,10 +138,10 @@ func (p *Plugin) makeReplacements(msg string, replacements []replacement, glClie
 		}
 		lines, err := filterLines(string(decoded), start, end)
 		if err != nil {
-			p.API.LogError("error while filtering lines", "error", err.Error(), "path", r.permalinkInfo.path)
+			p.API.LogDebug("error while filtering lines", "error", err.Error(), "path", r.permalinkInfo.path)
 		}
 		if lines == "" {
-			p.API.LogError("line numbers out of range. Skipping.", "file", r.permalinkInfo.path, "start", start, "end", end)
+			p.API.LogDebug("line numbers out of range. Skipping.", "file", r.permalinkInfo.path, "start", start, "end", end)
 			continue
 		}
 		final := getCodeMarkdown(r.permalinkInfo.user, r.permalinkInfo.repo, r.permalinkInfo.path, r.word, lines, isTruncated)

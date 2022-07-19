@@ -224,7 +224,7 @@ func TestGetReplacements(t *testing.T) {
 
 	for _, tc := range tcs {
 		t.Run(tc.name, func(t *testing.T) {
-			replacements := p.getReplacements(tc.input)
+			replacements := p.getPermalinkReplacements(tc.input)
 			require.Equalf(t, tc.numReplacements, len(replacements), "unexpected number of replacements for %s", tc.input)
 			for i, r := range replacements {
 				assert.Equalf(t, tc.replacements[i].index, r.index, "unexpected replacement index")
@@ -391,12 +391,13 @@ func TestMakeReplacements(t *testing.T) {
 
 const (
 	baseURLPath = "/api/v4"
+	requestURLPath = "/api/v4/projects/mattermost/mattermost-server/repository/files/app/authentication.go"
 )
 
 func getClient() (*gitlab.Client, func()) {
 	apiHandler := http.NewServeMux()
 	apiHandler.HandleFunc("/", func(w http.ResponseWriter, req *http.Request) {
-		if req.URL.Path == "/api/v4/projects/mattermost/mattermost-server/repository/files/app/authentication.go" {
+		if req.URL.Path == requestURLPath {
 			fmt.Fprintln(w, `{
 				"file_name": "authentication.go",
 				"file_path": "app/authentication.go",
