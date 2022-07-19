@@ -45,7 +45,6 @@ const (
 
 var manifest model.Manifest = root.Manifest
 
-
 type Plugin struct {
 	plugin.MattermostPlugin
 	client *pluginapi.Client
@@ -171,7 +170,7 @@ func (p *Plugin) MessageWillBePosted(c *plugin.Context, post *model.Post) (*mode
 	}
 	info, err := p.getGitlabUserInfoByMattermostID(post.UserId)
 	if err.ID == APIErrorIDNotConnected {
-		p.API.LogDebug("processing permalink of the post",err.Message)	
+		p.API.LogDebug("processing permalink of the post", err.Message)
 	}
 	if err != nil {
 		p.API.LogDebug("error in getting user info", "error", err.Message)
