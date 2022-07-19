@@ -1,0 +1,42 @@
+make --dry-run --always-make --keep-going --print-directory
+make: Entering directory '/home/jtg-d126/mattermost-plugin-gitlab'
+ 
+cd webapp && /home/jtg-d126/.nvm/versions/node/v8.0.0/bin/npm install --verbose
+touch webapp/node_modules
+echo Checking for style guide compliance
+cd webapp && npm run lint
+if ! [ -x "$(command -v golangci-lint)" ]; then \
+	echo "golangci-lint is not installed. Please see https://github.com/golangci/golangci-lint#install for installation instructions."; \
+	exit 1; \
+fi; \
+
+echo Running golangci-lint
+golangci-lint run ./...
+ 
+/usr/local/go/bin/go test -v -race ./server/...
+cd webapp && /home/jtg-d126/.nvm/versions/node/v8.0.0/bin/npm run test;
+ 
+mkdir -p server/dist;
+cd server && env GOOS=linux GOARCH=amd64 /usr/local/go/bin/go build  -ldflags '-X "github.com/mattermost/mattermost-plugin-api/experimental/telemetry.rudderWriteKey=1d5bMvdrfWClLxgK1FvV3s4U1tg"' -trimpath -o dist/plugin-linux-amd64;
+ 
+cd server && env GOOS=linux GOARCH=arm64 /usr/local/go/bin/go build  -ldflags '-X "github.com/mattermost/mattermost-plugin-api/experimental/telemetry.rudderWriteKey=1d5bMvdrfWClLxgK1FvV3s4U1tg"' -trimpath -o dist/plugin-linux-arm64;
+cd server && env GOOS=darwin GOARCH=amd64 /usr/local/go/bin/go build  -ldflags '-X "github.com/mattermost/mattermost-plugin-api/experimental/telemetry.rudderWriteKey=1d5bMvdrfWClLxgK1FvV3s4U1tg"' -trimpath -o dist/plugin-darwin-amd64;
+cd server && env GOOS=darwin GOARCH=arm64 /usr/local/go/bin/go build  -ldflags '-X "github.com/mattermost/mattermost-plugin-api/experimental/telemetry.rudderWriteKey=1d5bMvdrfWClLxgK1FvV3s4U1tg"' -trimpath -o dist/plugin-darwin-arm64;
+cd server && env GOOS=windows GOARCH=amd64 /usr/local/go/bin/go build  -ldflags '-X "github.com/mattermost/mattermost-plugin-api/experimental/telemetry.rudderWriteKey=1d5bMvdrfWClLxgK1FvV3s4U1tg"' -trimpath -o dist/plugin-windows-amd64.exe;
+ 
+cd webapp && /home/jtg-d126/.nvm/versions/node/v8.0.0/bin/npm run build;
+ 
+rm -rf dist/
+mkdir -p dist/com.github.manland.mattermost-plugin-gitlab
+cp plugin.json dist/com.github.manland.mattermost-plugin-gitlab/
+cp -r assets dist/com.github.manland.mattermost-plugin-gitlab/
+cp -r public dist/com.github.manland.mattermost-plugin-gitlab/
+mkdir -p dist/com.github.manland.mattermost-plugin-gitlab/server
+cp -r server/dist dist/com.github.manland.mattermost-plugin-gitlab/server/
+ 
+mkdir -p dist/com.github.manland.mattermost-plugin-gitlab/webapp
+cp -r webapp/dist dist/com.github.manland.mattermost-plugin-gitlab/webapp/
+cd dist && tar -cvzf com.github.manland.mattermost-plugin-gitlab-1.4.0.tar.gz com.github.manland.mattermost-plugin-gitlab
+echo plugin built at: dist/com.github.manland.mattermost-plugin-gitlab-1.4.0.tar.gz
+make: Leaving directory '/home/jtg-d126/mattermost-plugin-gitlab'
+ 
