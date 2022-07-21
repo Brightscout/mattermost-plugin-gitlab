@@ -169,7 +169,7 @@ func (p *Plugin) MessageWillBePosted(c *plugin.Context, post *model.Post) (*mode
 		return nil, ""
 	}
 	info, err := p.getGitlabUserInfoByMattermostID(post.UserId)
-	if err.ID == APIErrorIDNotConnected {
+	if err != nil && err.ID == APIErrorIDNotConnected {
 		p.API.LogDebug("processing permalink of the post", err.Message)
 	}
 	if err != nil {

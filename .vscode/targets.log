@@ -5,9 +5,8 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 # License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
- 
 
-# Make data base, printed on Tue Jul 19 10:14:59 2022
+# Make data base, printed on Thu Jul 21 07:59:28 2022
 
 # Variables
 
@@ -31,6 +30,8 @@ VSCODE_LOG_NATIVE = false
 NVM_INC = /home/jtg-d126/.nvm/versions/node/v8.0.0/include/node
 # automatic
 ?D = $(patsubst %/,%,$(dir $?))
+# environment
+IM_CONFIG_PHASE = 1
 # automatic
 @D = $(patsubst %/,%,$(dir $@))
 # environment
@@ -45,8 +46,6 @@ CURDIR := /home/jtg-d126/mattermost-plugin-gitlab
 SHELL = /bin/sh
 # makefile (from 'Makefile', line 1)
 GO = $(shell command -v go 2> /dev/null)
-# environment
-VTE_VERSION = 6003
 # makefile (from 'Makefile', line 10)
 DLV_DEBUG_PORT := 2346
 # environment
@@ -54,19 +53,19 @@ VSCODE_NLS_CONFIG = {"locale":"en-gb","availableLanguages":{},"_languagePackSupp
 # makefile (from 'build/custom.mk', line 6)
 GO_BUILD_FLAGS =  -ldflags '-X "github.com/mattermost/mattermost-plugin-api/experimental/telemetry.rudderWriteKey=$(MM_RUDDER_WRITE_KEY)"'
 # environment
-JOURNAL_STREAM = 8:52676
-# makefile (from 'Makefile', line 9)
-MM_UTILITIES_DIR = ../mattermost-utilities
+_ = /usr/share/code/code
+# environment
+JOURNAL_STREAM = 8:46965
 # environment
 XDG_CONFIG_DIRS = /etc/xdg/xdg-ubuntu:/etc/xdg
 # makefile (from 'Makefile', line 5)
 MANIFEST_FILE = plugin.json
 # makefile (from 'build/custom.mk', line 1)
 MAKEFILE_LIST :=  Makefile build/setup.mk build/legacy.mk build/custom.mk
+# automatic
+@F = $(notdir $@)
 # environment
-MM_ADMIN_PASSWORD = Nitya@1qaz
-# environment
-IM_CONFIG_PHASE = 1
+GIO_LAUNCHED_DESKTOP_FILE = /usr/share/applications/code.desktop
 # makefile (from 'Makefile', line 14)
 GO111MODULE = on
 # makefile (from 'Makefile', line 2)
@@ -80,21 +79,19 @@ XDG_DATA_DIRS = /usr/share/ubuntu:/usr/local/share/:/usr/share/:/var/lib/snapd/d
 # environment
 VSCODE_AMD_ENTRYPOINT = vs/workbench/api/node/extensionHostProcess
 # environment
-DBUS_SESSION_BUS_ADDRESS = unix:path=/run/user/1000/bus,guid=0aa6a74a159ca3442ad1890b62cce11d
+DBUS_SESSION_BUS_ADDRESS = unix:path=/run/user/1000/bus
 # environment
 VSCODE_VERBOSE_LOGGING = true
 # environment
-_ = /usr/bin/code
-# environment
 MANAGERPID = 1612
-# automatic
-@F = $(notdir $@)
+# makefile (from 'build/setup.mk', line 14)
+PLUGIN_ID = $(shell build/bin/manifest id)
 # makefile (from 'build/setup.mk', line 32)
 HAS_PUBLIC = $(wildcard public/.)
 # environment
 LESSOPEN = | /usr/bin/lesspipe %s
 # environment
-VSCODE_CWD = /home/jtg-d126/mattermost-plugin-gitlab
+VSCODE_CWD = /home/jtg-d126
 # environment
 GOPROXY = https://proxy.golang.org,direct
 # default
@@ -109,8 +106,6 @@ SESSION_MANAGER = local/jtgd126-Latitude-3400:@/tmp/.ICE-unix/1839,unix/jtgd126-
 BUNDLE_NAME = $(PLUGIN_ID)-$(PLUGIN_VERSION).tar.gz
 # environment
 XDG_RUNTIME_DIR = /run/user/1000
-# makefile (from 'build/setup.mk', line 14)
-PLUGIN_ID = $(shell build/bin/manifest id)
 # makefile (from 'Makefile', line 11)
 DEFAULT_GOOS := linux
 # environment
@@ -126,15 +121,19 @@ VSCODE_LOG_STACK = false
 # environment
 ELECTRON_RUN_AS_NODE = 1
 # environment
-INVOCATION_ID = c02d5016e17d478aba57303930f42e06
+INVOCATION_ID = a1122dfe34834658a0a3243841fb2b2c
 # default
 .FEATURES := target-specific order-only second-expansion else-if shortest-stem undefine oneshell archives jobserver output-sync check-symlink load
 # environment
-LS_COLORS = rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:
+LS_COLORS = 
+# makefile (from 'Makefile', line 9)
+MM_UTILITIES_DIR = ../mattermost-utilities
 # environment
 XDG_SESSION_DESKTOP = ubuntu
 # environment
 SSH_AUTH_SOCK = /run/user/1000/keyring/ssh
+# environment
+GIO_LAUNCHED_DESKTOP_FILE_PID = 3760057
 # automatic
 %F = $(notdir $%)
 # environment
@@ -160,8 +159,6 @@ HOME = /home/jtg-d126
 # environment
 LESSCLOSE = /usr/bin/lesspipe %s %s
 # environment
-VSCODE_CLI = 1
-# environment
 VSCODE_CODE_CACHE_PATH = /home/jtg-d126/.config/Code/CachedData/4af164ea3a06f701fe3e89a2bcbb421d2026b68f
 # makefile (from 'Makefile', line 3)
 CURL = $(shell command -v curl 2> /dev/null)
@@ -172,8 +169,6 @@ APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = 1
 # environment
 NVM_CD_FLAGS = 
 # environment
-ELECTRON_NO_ATTACH_CONSOLE = 1
-# environment
 VSCODE_HANDLES_UNCAUGHT_ERRORS = true
 # environment
 GNOME_DESKTOP_SESSION_ID = this-is-deprecated
@@ -183,8 +178,6 @@ GNOME_DESKTOP_SESSION_ID = this-is-deprecated
 DEFAULT_GOARCH := amd64
 # environment
 MAKELEVEL := 0
-# environment
-COLORTERM = truecolor
 # default
 MAKE = $(MAKE_COMMAND)
 # default
@@ -192,11 +185,11 @@ MAKECMDGOALS := all
 # environment
 QT_IM_MODULE = ibus
 # environment
-SHLVL = 1
+SHLVL = 0
 # environment
 GNOME_SHELL_SESSION_MODE = ubuntu
 # environment
-VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-d9a5de8a-78dd-4291-b2cf-2fbd007265bd.sock
+VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-8553cb83-9149-43e9-b5fa-063b4b83ee9e.sock
 # default
 MAKE_VERSION := 4.2.1
 # environment
@@ -217,8 +210,6 @@ MM_DEBUG =
 %D = $(patsubst %/,%,$(dir $%))
 # default
 MAKE_COMMAND := make
-# environment
-OLDPWD = /home/jtg-d126
 # default
 .VARIABLES := 
 # automatic
@@ -247,8 +238,6 @@ QT_ACCESSIBILITY = 1
 DEFAULTS_PATH = /usr/share/gconf/ubuntu.default.path
 # makefile (from 'Makefile', line 7)
 GO_TEST_FLAGS = -race
-# environment
-MM_SERVICESETTINGS_SITEURL = http://localhost:8065
 # 'override' directive
 .SHELLSTATUS := 0
 # default
@@ -256,19 +245,13 @@ MAKEFILES :=
 # automatic
 <F = $(notdir $<)
 # environment
-MM_ADMIN_USERNAME = Nityanand13
-# environment
 LC_ALL = C
 # makefile (from 'build/setup.mk', line 29)
 HAS_WEBAPP = $(shell build/bin/manifest has_webapp)
 # environment
-DBUS_STARTER_BUS_TYPE = session
-# environment
-GNOME_TERMINAL_SCREEN = /org/gnome/Terminal/screen/8a944673_e9fb_4f9d_bcaf_c1f1c055c36a
+GJS_DEBUG_TOPICS = JS ERROR;JS LOG
 # automatic
 ^F = $(notdir $^)
-# environment
-GNOME_TERMINAL_SERVICE = :1.7656
 # default
 SUFFIXES := 
 # environment
@@ -277,20 +260,18 @@ CHROME_DESKTOP = code-url-handler.desktop
 WINDOWPATH = 2
 # default
 .INCLUDE_DIRS = /usr/include /usr/local/include /usr/include
+# environment
+GJS_DEBUG_OUTPUT = stderr
 # default
 .RECIPEPREFIX := 
 # environment
 LANG = C
 # environment
-TERM = xterm-256color
-# environment
-VSCODE_PID = 2748879
-# environment
-DBUS_STARTER_ADDRESS = unix:path=/run/user/1000/bus,guid=0aa6a74a159ca3442ad1890b62cce11d
+VSCODE_PID = 3760057
 # makefile (from 'build/setup.mk', line 35)
 HAS_MM_UTILITIES = $(wildcard $(MM_UTILITIES_DIR)/.)
 # variable set hash-table stats:
-# Load=139/1024=14%, Rehash=0, Collisions=24/323=7%
+# Load=130/1024=13%, Rehash=0, Collisions=22/314=7%
 
 # Pattern-specific Variable Values
 
@@ -298,10 +279,10 @@ HAS_MM_UTILITIES = $(wildcard $(MM_UTILITIES_DIR)/.)
 
 # Directories
 
-# . (device 64769, inode 14292868): 26 files, no impossibilities.
  
+# . (device 64769, inode 14292868): 27 files, no impossibilities.
 
-# 26 files, no impossibilities in 1 directories.
+# 27 files, no impossibilities in 1 directories.
 
 # Implicit Rules
 
@@ -519,7 +500,6 @@ default: all
 
 webapp/node_modules: webapp/package.json
 #  Implicit rule search has not been done.
- 
 #  Last modified 2022-07-14 13:50:42.653339
 #  File has been updated.
 #  Successfully updated.
@@ -590,6 +570,7 @@ build/setup.mk:
 
 reset: detach
 #  Phony target (prerequisite of .PHONY).
+ 
 #  Implicit rule search has not been done.
 #  File does not exist.
 #  File has not been updated.
@@ -666,12 +647,12 @@ mock:
 
 # No general ('VPATH' variable) search path.
 
-# strcache buffers: 1 (0) / strings = 60 / storage = 561 B / avg = 9 B
-# current buf: size = 8162 B / used = 561 B / count = 60 / avg = 9 B
+# strcache buffers: 1 (0) / strings = 61 / storage = 574 B / avg = 9 B
+# current buf: size = 8162 B / used = 574 B / count = 61 / avg = 9 B
 
-# strcache performance: lookups = 197 / hit rate = 69%
+# strcache performance: lookups = 198 / hit rate = 69%
 # hash-table stats:
-# Load=60/8192=1%, Rehash=0, Collisions=1/197=1%
-# Finished Make data base on Tue Jul 19 10:14:59 2022
+# Load=61/8192=1%, Rehash=0, Collisions=1/198=1%
+# Finished Make data base on Thu Jul 21 07:59:28 2022
 
  
