@@ -145,9 +145,6 @@ func (p *Plugin) replacementOfMessage(r replacement, glClient *gitlab.Client, ch
 		return
 	}
 	final := getCodeMarkdown(r.permalinkData.user, r.permalinkData.repo, r.permalinkData.path, r.word, lines, isTruncated)
-
-	// replace word in msg starting from r.index only once.
-	// msg = msg[:r.index] + strings.Replace(msg[r.index:], r.word, final, 1)
 	channel <- final
 }
 
@@ -166,6 +163,7 @@ func (p *Plugin) makeReplacements(msg string, replacements []replacement, glClie
 		if len(channelData) == 0 {
 			continue
 		}
+		// replace word in msg starting from r.index only once.
 		msg = msg[:r.index] + strings.Replace(msg[r.index:], r.word, channelData, 1)
 	}
 	return msg
