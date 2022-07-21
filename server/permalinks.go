@@ -28,9 +28,9 @@ const permalinkLineContext = 3
 // replacement holds necessary info to replace GitLab permalinks
 // in messages with a code preview block.
 type replacement struct {
-	index int    // index of the permalink in the string
-	word  string // the permalink
-	permalinkInfo
+	index         int    // index of the permalink in the string
+	word          string // the permalink
+	permalinkData permalinkInfo
 }
 
 type permalinkInfo struct { // holds the necessary metadata of a permalink
@@ -71,17 +71,17 @@ func (p *Plugin) getPermalinkReplacements(msg string) []replacement {
 			}
 			switch name {
 			case "haswww":
-				r.permalinkInfo.haswww = m[j]
+				r.permalinkData.haswww = m[j]
 			case "user":
-				r.permalinkInfo.user = m[j]
+				r.permalinkData.user = m[j]
 			case "repo":
-				r.permalinkInfo.repo = m[j]
+				r.permalinkData.repo = m[j]
 			case "commit":
-				r.permalinkInfo.commit = m[j]
+				r.permalinkData.commit = m[j]
 			case "path":
-				r.permalinkInfo.path = m[j]
+				r.permalinkData.path = m[j]
 			case "line":
-				r.permalinkInfo.line = m[j]
+				r.permalinkData.line = m[j]
 			}
 		}
 		replacements = append(replacements, r)
@@ -89,65 +89,81 @@ func (p *Plugin) getPermalinkReplacements(msg string) []replacement {
 	return replacements
 }
 
+func (p *Plugin) replacementOfMessage(msg string, r replacement, glClient *gitlab.Client, channel chan string) {
+	// quick bailout if the commit hash is not proper.
+	if _, err := hex.DecodeString(r.permalinkData.commit); err != nil {
+		p.API.LogDebug("bad git commit hash in permalink", "error", err.Error(), "hash", r.permalinkData.commit)
+		channel <- ""
+		return
+	}
+
+	// get the file contents
+	opts := gitlab.GetFileOptions{
+		Ref: &r.permalinkData.commit,
+	}
+	projectPath := fmt.Sprintf("%s/%s", r.permalinkData.user, r.permalinkData.repo)
+	_, cancel := context.WithTimeout(context.Background(), permalinkReqTimeout)
+	file, _, err := glClient.RepositoryFiles.GetFile(projectPath, r.permalinkData.path, &opts)
+	defer cancel()
+	if err != nil {
+		p.API.LogDebug("error while fetching file contents", "error", err.Error(), "path", r.permalinkData.path)
+		channel <- ""
+		return
+	}
+	// if this is not a file, ignore.
+	if file == nil {
+		p.API.LogWarn("permalink is not a file", "file", r.permalinkData.path)
+		channel <- ""
+		return
+	}
+	decoded, err := base64.StdEncoding.DecodeString(file.Content)
+	if err != nil {
+		p.API.LogDebug("error while decoding file contents", "error", err.Error(), "path", r.permalinkData.path)
+		channel <- ""
+		return
+	}
+
+	// get the required lines.
+	start, end := getLineNumbers(r.permalinkData.line)
+	// bad anchor tag, ignore.
+	if start == -1 || end == -1 {
+		channel <- ""
+		return
+	}
+	isTruncated := false
+	if end-start > maxPreviewLines {
+		end = start + maxPreviewLines
+		isTruncated = true
+	}
+	lines, err := filterLines(string(decoded), start, end)
+	if err != nil {
+		p.API.LogDebug("error while filtering lines", "error", err.Error(), "path", r.permalinkData.path)
+	}
+	if lines == "" {
+		p.API.LogDebug("line numbers out of range. Skipping.", "file", r.permalinkData.path, "start", start, "end", end)
+		channel <- ""
+		return
+	}
+	final := getCodeMarkdown(r.permalinkData.user, r.permalinkData.repo, r.permalinkData.path, r.word, lines, isTruncated)
+
+	// replace word in msg starting from r.index only once.
+	msg = msg[:r.index] + strings.Replace(msg[r.index:], r.word, final, 1)
+	channel <- msg
+}
+
 // makeReplacements performs the given replacements on the msg and returns
 // the new msg. The replacements slice needs to be sorted by the index in ascending order.
 func (p *Plugin) makeReplacements(msg string, replacements []replacement, glClient *gitlab.Client) string {
 	// iterating the slice in reverse to preserve the replacement indices.
+	channel := make(chan string, len(replacements))
+	fmt.Print(replacements)
 	for i := len(replacements) - 1; i >= 0; i-- {
 		r := replacements[i]
-		// quick bailout if the commit hash is not proper.
-		if _, err := hex.DecodeString(r.permalinkInfo.commit); err != nil {
-			p.API.LogDebug("bad git commit hash in permalink", "error", err.Error(), "hash", r.permalinkInfo.commit)
-			continue
+		go p.replacementOfMessage(msg, r, glClient, channel)
+		channelMessage := <-channel
+		if len(channelMessage) != 0 {
+			msg = channelMessage
 		}
-
-		// get the file contents
-		opts := gitlab.GetFileOptions{
-			Ref: &r.permalinkInfo.commit,
-		}
-		projectPath := fmt.Sprintf("%s/%s", r.permalinkInfo.user, r.permalinkInfo.repo)
-		// TODO: make all of these requests concurrently.
-		_, cancel := context.WithTimeout(context.Background(), permalinkReqTimeout)
-		file, _, err := glClient.RepositoryFiles.GetFile(projectPath, r.permalinkInfo.path, &opts)
-		defer cancel()
-		if err != nil {
-			p.API.LogDebug("error while fetching file contents", "error", err.Error(), "path", r.permalinkInfo.path)
-			continue
-		}
-		// if this is not a file, ignore.
-		if file == nil {
-			p.API.LogWarn("permalink is not a file", "file", r.permalinkInfo.path)
-			continue
-		}
-		decoded, err := base64.StdEncoding.DecodeString(file.Content)
-		if err != nil {
-			p.API.LogDebug("error while decoding file contents", "error", err.Error(), "path", r.permalinkInfo.path)
-			continue
-		}
-
-		// get the required lines.
-		start, end := getLineNumbers(r.permalinkInfo.line)
-		// bad anchor tag, ignore.
-		if start == -1 || end == -1 {
-			continue
-		}
-		isTruncated := false
-		if end-start > maxPreviewLines {
-			end = start + maxPreviewLines
-			isTruncated = true
-		}
-		lines, err := filterLines(string(decoded), start, end)
-		if err != nil {
-			p.API.LogDebug("error while filtering lines", "error", err.Error(), "path", r.permalinkInfo.path)
-		}
-		if lines == "" {
-			p.API.LogDebug("line numbers out of range. Skipping.", "file", r.permalinkInfo.path, "start", start, "end", end)
-			continue
-		}
-		final := getCodeMarkdown(r.permalinkInfo.user, r.permalinkInfo.repo, r.permalinkInfo.path, r.word, lines, isTruncated)
-
-		// replace word in msg starting from r.index only once.
-		msg = msg[:r.index] + strings.Replace(msg[r.index:], r.word, final, 1)
 	}
 	return msg
 }
