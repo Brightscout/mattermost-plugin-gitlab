@@ -89,7 +89,7 @@ func (p *Plugin) getPermalinkReplacements(msg string) []replacement {
 	return replacements
 }
 
-func (p *Plugin) replacementOfMessage(msg string, r replacement, glClient *gitlab.Client, channel chan string) {
+func (p *Plugin) replacementOfMessage(r replacement, glClient *gitlab.Client, channel chan string) {
 	// quick bailout if the commit hash is not proper.
 	if _, err := hex.DecodeString(r.permalinkData.commit); err != nil {
 		p.API.LogDebug("bad git commit hash in permalink", "error", err.Error(), "hash", r.permalinkData.commit)
@@ -147,8 +147,8 @@ func (p *Plugin) replacementOfMessage(msg string, r replacement, glClient *gitla
 	final := getCodeMarkdown(r.permalinkData.user, r.permalinkData.repo, r.permalinkData.path, r.word, lines, isTruncated)
 
 	// replace word in msg starting from r.index only once.
-	msg = msg[:r.index] + strings.Replace(msg[r.index:], r.word, final, 1)
-	channel <- msg
+	// msg = msg[:r.index] + strings.Replace(msg[r.index:], r.word, final, 1)
+	channel <- final
 }
 
 // makeReplacements performs the given replacements on the msg and returns
@@ -156,14 +156,17 @@ func (p *Plugin) replacementOfMessage(msg string, r replacement, glClient *gitla
 func (p *Plugin) makeReplacements(msg string, replacements []replacement, glClient *gitlab.Client) string {
 	// iterating the slice in reverse to preserve the replacement indices.
 	channel := make(chan string, len(replacements))
-	fmt.Print(replacements)
 	for i := len(replacements) - 1; i >= 0; i-- {
 		r := replacements[i]
-		go p.replacementOfMessage(msg, r, glClient, channel)
-		channelMessage := <-channel
-		if len(channelMessage) != 0 {
-			msg = channelMessage
+		go p.replacementOfMessage(r, glClient, channel)
+	}
+	for i := len(replacements) - 1; i >= 0; i-- {
+		r := replacements[i]
+		channelData := <-channel
+		if len(channelData) == 0 {
+			continue
 		}
+		msg = msg[:r.index] + strings.Replace(msg[r.index:], r.word, channelData, 1)
 	}
 	return msg
 }
