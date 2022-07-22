@@ -170,15 +170,15 @@ func (p *Plugin) MessageWillBePosted(c *plugin.Context, post *model.Post) (*mode
 	}
 	info, err := p.getGitlabUserInfoByMattermostID(post.UserId)
 	if err != nil && err.ID == APIErrorIDNotConnected {
-		p.API.LogDebug("processing permalink of the post", err.Message)
+		p.API.LogDebug("Processing permalink of the post", err.Message)
 	}
 	if err != nil {
-		p.API.LogDebug("error in getting user info", "error", err.Message)
+		p.API.LogDebug("Error in getting user info", "error", err.Message)
 		return nil, ""
 	}
 	glClient, cErr := p.GitlabClient.GitlabConnect(*info.Token)
 	if cErr != nil {
-		p.API.LogDebug("error in getting GitLab client", "error", cErr.Error())
+		p.API.LogDebug("Error in getting GitLab client", "error", cErr.Error())
 		return nil, ""
 	}
 	post.Message = p.makeReplacements(msg, replacements, glClient)
@@ -304,7 +304,7 @@ func (p *Plugin) getGitlabUserInfoByMattermostID(userID string) (*gitlab.UserInf
 
 	unencryptedToken, err := decrypt([]byte(config.EncryptionKey), userInfo.Token.AccessToken)
 	if err != nil {
-		p.API.LogDebug("can't decrypt token", "err", err.Error())
+		p.API.LogDebug("Can't decrypt token", "err", err.Error())
 		return nil, &APIErrorResponse{ID: "", Message: "Unable to decrypt access token.", StatusCode: http.StatusInternalServerError}
 	}
 
@@ -344,7 +344,7 @@ func (p *Plugin) deleteGitlabIDToUserIDMapping(gitlabID int) error {
 func (p *Plugin) getGitlabToUserIDMapping(gitlabUsername string) string {
 	userID, err := p.API.KVGet(gitlabUsername + GitlabUsernameKey)
 	if err != nil {
-		p.API.LogDebug("can't get userId from store with username", "err", err.DetailedError, "username", gitlabUsername)
+		p.API.LogDebug("Can't get userId from store with username", "err", err.DetailedError, "username", gitlabUsername)
 	}
 	return string(userID)
 }
@@ -352,7 +352,7 @@ func (p *Plugin) getGitlabToUserIDMapping(gitlabUsername string) string {
 func (p *Plugin) getGitlabIDToUsernameMapping(gitlabUserID string) string {
 	gitlabUsername, err := p.API.KVGet(gitlabUserID + GitlabIDUsernameKey)
 	if err != nil {
-		p.API.LogDebug("can't get user id by login", "err", err.DetailedError)
+		p.API.LogDebug("Can't get user id by login", "err", err.DetailedError)
 	}
 	return string(gitlabUsername)
 }
@@ -360,7 +360,7 @@ func (p *Plugin) getGitlabIDToUsernameMapping(gitlabUserID string) string {
 func (p *Plugin) disconnectGitlabAccount(userID string) {
 	userInfo, err := p.getGitlabUserInfoByMattermostID(userID)
 	if err != nil {
-		p.API.LogDebug("can't get GitLab user info from mattermost id", "err", err.Message)
+		p.API.LogDebug("Can't get GitLab user info from mattermost id", "err", err.Message)
 		return
 	}
 	if userInfo == nil {
@@ -368,19 +368,19 @@ func (p *Plugin) disconnectGitlabAccount(userID string) {
 	}
 
 	if err := p.deleteGitlabUserInfo(userID); err != nil {
-		p.API.LogDebug("can't delete token in store", "err", err.Error, "userId", userID)
+		p.API.LogDebug("Can't delete token in store", "err", err.Error, "userId", userID)
 	}
 	if err := p.deleteGitlabToUserIDMapping(userInfo.GitlabUsername); err != nil {
-		p.API.LogDebug("can't delete username in store", "err", err.Error, "username", userInfo.GitlabUsername)
+		p.API.LogDebug("Can't delete username in store", "err", err.Error, "username", userInfo.GitlabUsername)
 	}
 	if err := p.deleteGitlabIDToUserIDMapping(userInfo.GitlabUserID); err != nil {
-		p.API.LogDebug("can't delete user id in store", "err", err.Error, "id", userInfo.GitlabUserID)
+		p.API.LogDebug("Can't delete user id in store", "err", err.Error, "id", userInfo.GitlabUserID)
 	}
 
 	if user, err := p.API.GetUser(userID); err == nil && user.Props != nil && len(user.Props["git_user"]) > 0 {
 		delete(user.Props, "git_user")
 		if _, err := p.API.UpdateUser(user); err != nil {
-			p.API.LogDebug("can't update user after delete git account", "err", err.DetailedError)
+			p.API.LogDebug("Can't update user after delete git account", "err", err.DetailedError)
 		}
 	}
 
@@ -418,7 +418,7 @@ func (p *Plugin) CreateBotDMPost(userID, message, postType string) *model.AppErr
 	}
 
 	if _, err := p.API.CreatePost(post); err != nil {
-		p.API.LogDebug("can't post DM", "err", err.DetailedError)
+		p.API.LogDebug("Can't post DM", "err", err.DetailedError)
 		return err
 	}
 
@@ -428,7 +428,7 @@ func (p *Plugin) CreateBotDMPost(userID, message, postType string) *model.AppErr
 func (p *Plugin) PostToDo(ctx context.Context, info *gitlab.UserInfo) {
 	hasTodo, text, err := p.GetToDo(ctx, info)
 	if err != nil {
-		p.API.LogDebug("can't post todo", "err", err.Error())
+		p.API.LogDebug("Can't post todo", "err", err.Error())
 		return
 	}
 	if !hasTodo {
@@ -436,7 +436,7 @@ func (p *Plugin) PostToDo(ctx context.Context, info *gitlab.UserInfo) {
 	}
 
 	if err := p.CreateBotDMPost(info.UserID, text, "custom_git_todo"); err != nil {
-		p.API.LogDebug("can't create dm post in post todo", "err", err.DetailedError)
+		p.API.LogDebug("Can't create dm post in post todo", "err", err.DetailedError)
 	}
 }
 
