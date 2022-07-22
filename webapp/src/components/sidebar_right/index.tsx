@@ -208,7 +208,7 @@ function SidebarRight({theme}: {theme: Theme}) {
     }
 
     let renderedGitlabItems: React.ReactNode = <div style={style.container}>{'You have no active items'}</div>;
-    if (gitlabItems.length) {
+    if (gitlabItems?.length) {
         renderedGitlabItems = gitlabItems.map((item) => (
             <GitlabItems
                 key={item.id}
