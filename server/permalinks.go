@@ -5,8 +5,8 @@ import (
 	"encoding/base64"
 	"encoding/hex"
 	"fmt"
-	"sync"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/xanzy/go-gitlab"
@@ -146,7 +146,7 @@ func (p *Plugin) replacementOfMessage(r replacement, glClient *gitlab.Client, in
 	}
 
 	final := getCodeMarkdown(r.permalinkData.user, r.permalinkData.repo, r.permalinkData.path, r.word, lines, isTruncated)
-	myMap[index]=final
+	myMap[index] = final
 }
 
 // makeReplacements performs the given replacements on the msg and returns
