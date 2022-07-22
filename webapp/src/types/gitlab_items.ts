@@ -1,6 +1,7 @@
 import {Theme} from 'mattermost-redux/types/preferences';
 import * as CSS from 'csstype';
-import { notificationReasons } from 'src/components/sidebar_right/gitlab_items';
+
+import {notificationReasons} from 'src/components/sidebar_right/gitlab_items';
 
 export interface Label {
     id: number;
@@ -61,4 +62,9 @@ export interface Item {
 export interface GitlabItemsProps {
     item: Item;
     theme: Theme;
+}
+
+export interface NotificationType {
+    id: string;
+    message: string;
 }

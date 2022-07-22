@@ -20,11 +20,11 @@ const (
 )
 
 type PRDetails struct {
-	IID       int                           `json:"iid"`
-	Status    *internGitlab.BuildStateValue `json:"status"`
-	SHA       string                        `json:"sha"`
-	Approvers int                           `json:"approvers"`
-	ProjectID int                           `json:"project_id"`
+	IID          int                           `json:"iid"`
+	Status       *internGitlab.BuildStateValue `json:"status"`
+	SHA          string                        `json:"sha"`
+	NumApprovers int                           `json:"approvers"`
+	ProjectID    int                           `json:"project_id"`
 }
 
 type MergeRequest struct {
@@ -373,11 +373,11 @@ func (g *gitlab) GetLabelDetails(client *internGitlab.Client, pid int, labels in
 	var labelsWithDetails []*internGitlab.Label
 	for _, label := range labels {
 		labelWithDetails, resp, err := client.Labels.GetLabel(pid, label)
-		if respErr := checkResponse(resp); respErr != nil {
-			return nil, respErr
-		}
 		if err != nil {
 			return nil, errors.Wrap(err, "can't get label in GitLab api")
+		}
+		if respErr := checkResponse(resp); respErr != nil {
+			return nil, respErr
 		}
 		labelsWithDetails = append(labelsWithDetails, labelWithDetails)
 	}
@@ -444,10 +444,10 @@ func (g *gitlab) fetchYourPrDetails(c context.Context, log logger.Logger, client
 	wg.Wait()
 	if commitDetails != nil && approvalDetails != nil {
 		return &PRDetails{
-			ProjectID: pid,
-			SHA:       sha,
-			Status:    commitDetails.Status,
-			Approvers: len(approvalDetails.ApprovedBy),
+			ProjectID:    pid,
+			SHA:          sha,
+			Status:       commitDetails.Status,
+			NumApprovers: len(approvalDetails.ApprovedBy),
 		}
 	}
 	return nil
