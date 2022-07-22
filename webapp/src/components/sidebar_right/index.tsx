@@ -105,36 +105,44 @@ function mapPrsToDetails(prs: Item[], details: Item[]) {
             ...pr,
             status: foundDetails.status,
             approvers: foundDetails.approvers,
-            total_reviewers: pr.total_reviewers,
+            total_reviewers: pr.reviewers.length,
         };
     });
 }
 
-function SidebarRight() {
-    const store = useSelector((state) => getPluginState(state));
-    const username = store.username;
-    const yourAssignments = store.yourAssignments;
-    const org = store.organization;
-    const unreads = store.unreads;
-    const gitlabURL = store.gitlabURL;
-    const rhsState = store.rhsState;
-    let reviews = store.reviews;
-    let yourPrs = store.yourPrs;
-    const reviewDetails = store.reviewDetails;
-    const yourPrDetails = store.yourPrDetails;
-    reviews = mapPrsToDetails(reviews, reviewDetails);
-    yourPrs = mapPrsToDetails(yourPrs, yourPrDetails);
+function SidebarRight({theme}: {theme: Theme}) {
+    const {username, yourAssignments, org, unreads, gitlabURL, rhsState, reviews, yourPrs, reviewDetails, yourPrDetails} = useSelector((state) => {
+        const store = getPluginState(state);
+        return {
+            username: store.username,
+            reviews: store.reviews,
+            reviewDetails: store.reviewDetails,
+            yourPrs: store.yourPrs,
+            yourPrDetails: store.yourPrDetails,
+            yourAssignments: store.yourAssignments,
+            unreads: store.unreads,
+            org: store.organization,
+            gitlabURL: store.gitlabURL,
+            rhsState: store.rhsState,
+        };
+    });
 
-    const [prs, setPrs] = useState<Item[]>(yourPrs);
-    const [prsRhsState, setPrsRhsState] = useState('');
-    const [review, setReview] = useState<Item[]>(reviews);
-    const [reviewsRhsState, setReviewsRhsState] = useState('');
+    const [updatedPrs, setUpdatedPrs] = useState<Item[]>(yourPrs);
+    const [RHSState, setRHSState] = useState('');
+    const [updatedReviews, setUpdatedReviews] = useState<Item[]>(reviews);
 
     useEffect(() => {
-        setPrs(yourPrs);
-        setPrsRhsState(rhsState);
-        setReview(reviews);
-        setReviewsRhsState(rhsState);
+        setUpdatedReviews(mapPrsToDetails(reviews, reviewDetails));
+    }, [reviews, reviewDetails]);
+
+    useEffect(() => {
+        setUpdatedPrs(mapPrsToDetails(yourPrs, yourPrDetails));
+    }, [yourPrs, yourPrDetails]);
+
+    useEffect(() => {
+        setUpdatedPrs(yourPrs);
+        setRHSState(rhsState);
+        setUpdatedReviews(reviews);
         if (yourPrs && rhsState === RHSStates.PRS) {
             getYourPrDetails(
                 mapGitlabItemListToPrList(yourPrs),
@@ -148,17 +156,17 @@ function SidebarRight() {
     }, []);
 
     useEffect(() => {
-        if (shouldUpdateDetails(yourPrs, prs, RHSStates.PRS, rhsState, prsRhsState)) {
-            setPrs(yourPrs);
-            setPrsRhsState(rhsState);
+        if (shouldUpdateDetails(yourPrs, updatedPrs, RHSStates.PRS, rhsState, RHSState)) {
+            setUpdatedPrs(yourPrs);
+            setRHSState(rhsState);
             getYourPrDetails(mapGitlabItemListToPrList(yourPrs));
         }
     }, [yourPrs, rhsState]);
 
     useEffect(() => {
-        if (shouldUpdateDetails(reviews, review, RHSStates.REVIEWS, rhsState, reviewsRhsState)) {
-            setReview(reviews);
-            setReviewsRhsState(rhsState);
+        if (shouldUpdateDetails(reviews, updatedReviews, RHSStates.REVIEWS, rhsState, RHSState)) {
+            setUpdatedReviews(reviews);
+            setRHSState(rhsState);
             getReviewDetails(mapGitlabItemListToPrList(reviews));
         }
     }, [reviews, rhsState]);

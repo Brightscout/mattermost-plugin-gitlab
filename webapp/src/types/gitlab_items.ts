@@ -57,6 +57,7 @@ export interface Item {
     target: Target;
     approvers: number;
     total_reviewers: number;
+    reviewers: User[];
 }
 
 export interface GitlabItemsProps {
