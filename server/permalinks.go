@@ -5,6 +5,7 @@ import (
 	"encoding/base64"
 	"encoding/hex"
 	"fmt"
+	"sync"
 	"strings"
 	"time"
 
@@ -28,12 +29,12 @@ const permalinkLineContext = 3
 // replacement holds necessary info to replace GitLab permalinks
 // in messages with a code preview block.
 type replacement struct {
-	index         int    // index of the permalink in the string
-	word          string // the permalink
+	index         int    // Index of the permalink in the string
+	word          string // The permalink
 	permalinkData permalinkInfo
 }
 
-type permalinkInfo struct { // holds the necessary metadata of a permalink
+type permalinkInfo struct { // Holds the necessary metadata of a permalink
 	haswww string
 	commit string
 	user   string
@@ -45,12 +46,12 @@ type permalinkInfo struct { // holds the necessary metadata of a permalink
 // getPermalinkReplacements returns the permalink replacements that need to be performed
 // on a message. The returned slice is sorted by the index in ascending order.
 func (p *Plugin) getPermalinkReplacements(msg string) []replacement {
-	// find the permalinks from the msg using a regex
+	// Find the permalinks from the msg using a regex
 	matches := gitlabPermalinkRegex.FindAllStringSubmatch(msg, -1)
 	indices := gitlabPermalinkRegex.FindAllStringIndex(msg, -1)
 	var replacements []replacement
 	for i, m := range matches {
-		// have a limit on the number of replacements to do
+		// Have a limit on the number of replacements to do
 		if i > maxPermalinkReplacements {
 			break
 		}
@@ -60,11 +61,11 @@ func (p *Plugin) getPermalinkReplacements(msg string) []replacement {
 			index: index,
 			word:  word,
 		}
-		// ignore if the word is inside a link
+		// Ignore if the word is inside a link
 		if isInsideLink(msg, index) {
 			continue
 		}
-		// populate the permalinkInfo with the extracted groups of the regex
+		// Populate the permalinkInfo with the extracted groups of the regex
 		for j, name := range gitlabPermalinkRegex.SubexpNames() {
 			if j == 0 {
 				continue
@@ -89,15 +90,15 @@ func (p *Plugin) getPermalinkReplacements(msg string) []replacement {
 	return replacements
 }
 
-func (p *Plugin) replacementOfMessage(r replacement, glClient *gitlab.Client, channel chan string) {
-	// quick bailout if the commit hash is not proper.
+func (p *Plugin) replacementOfMessage(r replacement, glClient *gitlab.Client, index int, wg *sync.WaitGroup, myMap map[int]string) {
+	defer wg.Done()
+	// Quick bailout if the commit hash is not proper.
 	if _, err := hex.DecodeString(r.permalinkData.commit); err != nil {
-		p.API.LogDebug("bad git commit hash in permalink", "error", err.Error(), "hash", r.permalinkData.commit)
-		channel <- ""
+		p.API.LogDebug("Bad git commit hash in permalink", "error", err.Error(), "hash", r.permalinkData.commit)
 		return
 	}
 
-	// get the file contents
+	// Get the file contents
 	opts := gitlab.GetFileOptions{
 		Ref: &r.permalinkData.commit,
 	}
@@ -106,65 +107,65 @@ func (p *Plugin) replacementOfMessage(r replacement, glClient *gitlab.Client, ch
 	file, _, err := glClient.RepositoryFiles.GetFile(projectPath, r.permalinkData.path, &opts)
 	defer cancel()
 	if err != nil {
-		p.API.LogDebug("error while fetching file contents", "error", err.Error(), "path", r.permalinkData.path)
-		channel <- ""
+		p.API.LogDebug("Error while fetching file contents", "error", err.Error(), "path", r.permalinkData.path)
 		return
 	}
-	// if this is not a file, ignore.
+	// If this is not a file, ignore.
 	if file == nil {
-		p.API.LogWarn("permalink is not a file", "file", r.permalinkData.path)
-		channel <- ""
-		return
-	}
-	decoded, err := base64.StdEncoding.DecodeString(file.Content)
-	if err != nil {
-		p.API.LogDebug("error while decoding file contents", "error", err.Error(), "path", r.permalinkData.path)
-		channel <- ""
+		p.API.LogWarn("Permalink is not a file", "file", r.permalinkData.path)
+
 		return
 	}
 
-	// get the required lines.
-	start, end := getLineNumbers(r.permalinkData.line)
-	// bad anchor tag, ignore.
-	if start == -1 || end == -1 {
-		channel <- ""
+	decoded, err := base64.StdEncoding.DecodeString(file.Content)
+	if err != nil {
+		p.API.LogDebug("Error while decoding file contents", "error", err.Error(), "path", r.permalinkData.path)
 		return
 	}
+	// Get the required lines.
+	start, end := getLineNumbers(r.permalinkData.line)
+	// Bad anchor tag, ignore.
+	if start == -1 || end == -1 {
+		return
+	}
+
 	isTruncated := false
 	if end-start > maxPreviewLines {
 		end = start + maxPreviewLines
 		isTruncated = true
 	}
+
 	lines, err := filterLines(string(decoded), start, end)
 	if err != nil {
-		p.API.LogDebug("error while filtering lines", "error", err.Error(), "path", r.permalinkData.path)
+		p.API.LogDebug("Error while filtering lines", "error", err.Error(), "path", r.permalinkData.path)
 	}
+
 	if lines == "" {
-		p.API.LogDebug("line numbers out of range. Skipping.", "file", r.permalinkData.path, "start", start, "end", end)
-		channel <- ""
+		p.API.LogDebug("Line numbers out of range. Skipping.", "file", r.permalinkData.path, "start", start, "end", end)
 		return
 	}
+
 	final := getCodeMarkdown(r.permalinkData.user, r.permalinkData.repo, r.permalinkData.path, r.word, lines, isTruncated)
-	channel <- final
+	myMap[index]=final
 }
 
 // makeReplacements performs the given replacements on the msg and returns
 // the new msg. The replacements slice needs to be sorted by the index in ascending order.
 func (p *Plugin) makeReplacements(msg string, replacements []replacement, glClient *gitlab.Client) string {
-	// iterating the slice in reverse to preserve the replacement indices.
-	channel := make(chan string, len(replacements))
+	// Iterating the slice in reverse to preserve the replacement indices.
+	wg := sync.WaitGroup{}
+	var myMap = make(map[int]string)
 	for i := len(replacements) - 1; i >= 0; i-- {
-		r := replacements[i]
-		go p.replacementOfMessage(r, glClient, channel)
+		wg.Add(1)
+		go p.replacementOfMessage(replacements[i], glClient, i, &wg, myMap)
 	}
+	wg.Wait()
 	for i := len(replacements) - 1; i >= 0; i-- {
 		r := replacements[i]
-		channelData := <-channel
-		if len(channelData) == 0 {
-			continue
+		if val, ok := myMap[i]; ok {
+			// Replace word in msg starting from r.index only once.
+			msg = msg[:r.index] + strings.Replace(msg[r.index:], r.word, val, 1)
 		}
-		// replace word in msg starting from r.index only once.
-		msg = msg[:r.index] + strings.Replace(msg[r.index:], r.word, channelData, 1)
 	}
 	return msg
 }
