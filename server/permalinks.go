@@ -90,7 +90,7 @@ func (p *Plugin) getPermalinkReplacements(msg string) []replacement {
 	return replacements
 }
 
-func (p *Plugin) replacementOfMessage(r replacement, glClient *gitlab.Client, index int, wg *sync.WaitGroup, markDownForPermalink map[int]string) {
+func (p *Plugin) replacementOfMessage(r replacement, glClient *gitlab.Client, index int, wg *sync.WaitGroup, myMap map[int]string) {
 	defer wg.Done()
 	// Quick bailout if the commit hash is not proper.
 	if _, err := hex.DecodeString(r.permalinkData.commit); err != nil {
@@ -113,6 +113,7 @@ func (p *Plugin) replacementOfMessage(r replacement, glClient *gitlab.Client, in
 	// If this is not a file, ignore.
 	if file == nil {
 		p.API.LogWarn("Permalink is not a file", "file", r.permalinkData.path)
+
 		return
 	}
 
@@ -144,7 +145,8 @@ func (p *Plugin) replacementOfMessage(r replacement, glClient *gitlab.Client, in
 		return
 	}
 
-	markDownForPermalink[index] = getCodeMarkdown(r.permalinkData.user, r.permalinkData.repo, r.permalinkData.path, r.word, lines, isTruncated)
+	final := getCodeMarkdown(r.permalinkData.user, r.permalinkData.repo, r.permalinkData.path, r.word, lines, isTruncated)
+	myMap[index] = final
 }
 
 // makeReplacements performs the given replacements on the msg and returns
@@ -152,15 +154,15 @@ func (p *Plugin) replacementOfMessage(r replacement, glClient *gitlab.Client, in
 func (p *Plugin) makeReplacements(msg string, replacements []replacement, glClient *gitlab.Client) string {
 	// Iterating the slice in reverse to preserve the replacement indices.
 	wg := sync.WaitGroup{}
-	var markDownForPermalink = make(map[int]string)
+	var myMap = make(map[int]string)
 	for i := len(replacements) - 1; i >= 0; i-- {
 		wg.Add(1)
-		go p.replacementOfMessage(replacements[i], glClient, i, &wg, markDownForPermalink)
+		go p.replacementOfMessage(replacements[i], glClient, i, &wg, myMap)
 	}
 	wg.Wait()
 	for i := len(replacements) - 1; i >= 0; i-- {
 		r := replacements[i]
-		if val, ok := markDownForPermalink[i]; ok {
+		if val, ok := myMap[i]; ok {
 			// Replace word in msg starting from r.index only once.
 			msg = msg[:r.index] + strings.Replace(msg[r.index:], r.word, val, 1)
 		}
