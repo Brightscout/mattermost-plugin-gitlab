@@ -373,11 +373,11 @@ func (g *gitlab) GetLabelDetails(client *internGitlab.Client, pid int, labels in
 	var labelsWithDetails []*internGitlab.Label
 	for _, label := range labels {
 		labelWithDetails, resp, err := client.Labels.GetLabel(pid, label)
-		if err != nil {
-			return nil, errors.Wrap(err, "can't get label in GitLab api")
-		}
 		if respErr := checkResponse(resp); respErr != nil {
 			return nil, respErr
+		}
+		if err != nil {
+			return nil, errors.Wrap(err, "can't get label in GitLab api")
 		}
 		labelsWithDetails = append(labelsWithDetails, labelWithDetails)
 	}

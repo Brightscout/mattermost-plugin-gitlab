@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {IntlProvider} from 'react-intl';
 
-import {getTranslations} from '../../../i18n';
+import {getTranslations} from 'i18n';
 
 export type Props = {
     currentLocale: string,

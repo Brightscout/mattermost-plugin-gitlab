@@ -83,7 +83,7 @@ function GitlabItems({item, theme}: GitlabItemsProps) {
 
     const titleText = item.title ?? item.target?.title ?? '';
 
-    let title: JSX.Element | null = <>{titleText}</>;
+    let title: JSX.Element | undefined = <>{titleText}</>;
     if (item.web_url || item.target_url) {
         title = (
             <a
@@ -111,7 +111,7 @@ function GitlabItems({item, theme}: GitlabItemsProps) {
         }
     }
 
-    const milestone: JSX.Element | null = item.milestone ? (
+    const milestone: JSX.Element | undefined = item.milestone ? (
         <span
             style={{
                 ...style.milestoneIcon,
@@ -126,7 +126,7 @@ function GitlabItems({item, theme}: GitlabItemsProps) {
         </span>
     ) : null;
 
-    const labels: JSX.Element[] | null = item.labels_with_details ? getGitlabLabels(item.labels_with_details) : null;
+    const labels: JSX.Element[] | undefined = item.labels_with_details ? getGitlabLabels(item.labels_with_details) : null;
 
     let hasConflict: React.ReactNode | undefined;
     if (item.has_conflicts) {

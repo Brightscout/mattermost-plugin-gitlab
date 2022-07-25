@@ -11,7 +11,7 @@ import {RHSStates} from 'src/constants';
 import {Item} from 'src/types/gitlab_items';
 
 import {getPluginState} from 'src/selectors';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 
 import GitlabItems from './gitlab_items';
 
@@ -130,6 +130,7 @@ function SidebarRight({theme}: {theme: Theme}) {
     const [updatedPrs, setUpdatedPrs] = useState<Item[]>(yourPrs);
     const [RHSState, setRHSState] = useState('');
     const [updatedReviews, setUpdatedReviews] = useState<Item[]>(reviews);
+    const dispatch = useDispatch();
 
     useEffect(() => {
         setUpdatedReviews(mapPrsToDetails(reviews, reviewDetails));
@@ -140,17 +141,14 @@ function SidebarRight({theme}: {theme: Theme}) {
     }, [yourPrs, yourPrDetails]);
 
     useEffect(() => {
-        setUpdatedPrs(yourPrs);
-        setRHSState(rhsState);
-        setUpdatedReviews(reviews);
         if (yourPrs && rhsState === RHSStates.PRS) {
-            getYourPrDetails(
+            dispatch(getYourPrDetails(
                 mapGitlabItemListToPrList(yourPrs),
-            );
+            ));
             if (reviews && rhsState === RHSStates.REVIEWS) {
-                getReviewDetails(
+                dispatch(getReviewDetails(
                     mapGitlabItemListToPrList(reviews),
-                );
+                ));
             }
         }
     }, []);
@@ -159,7 +157,7 @@ function SidebarRight({theme}: {theme: Theme}) {
         if (shouldUpdateDetails(yourPrs, updatedPrs, RHSStates.PRS, rhsState, RHSState)) {
             setUpdatedPrs(yourPrs);
             setRHSState(rhsState);
-            getYourPrDetails(mapGitlabItemListToPrList(yourPrs));
+            dispatch(getYourPrDetails(mapGitlabItemListToPrList(yourPrs)));
         }
     }, [yourPrs, rhsState]);
 
@@ -167,7 +165,7 @@ function SidebarRight({theme}: {theme: Theme}) {
         if (shouldUpdateDetails(reviews, updatedReviews, RHSStates.REVIEWS, rhsState, RHSState)) {
             setUpdatedReviews(reviews);
             setRHSState(rhsState);
-            getReviewDetails(mapGitlabItemListToPrList(reviews));
+            dispatch(getReviewDetails(mapGitlabItemListToPrList(reviews)));
         }
     }, [reviews, rhsState]);
 
