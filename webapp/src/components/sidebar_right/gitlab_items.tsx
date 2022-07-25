@@ -111,7 +111,7 @@ function GitlabItems({item, theme}: GitlabItemsProps) {
         }
     }
 
-    const milestone: JSX.Element | undefined = item.milestone ? (
+    const milestone: JSX.Element | undefined = item.milestone && (
         <span
             style={{
                 ...style.milestoneIcon,
@@ -124,9 +124,9 @@ function GitlabItems({item, theme}: GitlabItemsProps) {
             <SignIcon/>
             {item.milestone.title}
         </span>
-    ) : undefined;
+    );
 
-    const labels: JSX.Element[] | undefined = item.labels_with_details ? getGitlabLabels(item.labels_with_details) : undefined;
+    const labels: JSX.Element[] | undefined = item.labels_with_details && getGitlabLabels(item.labels_with_details);
 
     let hasConflict: React.ReactNode | undefined;
     if (item.has_conflicts) {
