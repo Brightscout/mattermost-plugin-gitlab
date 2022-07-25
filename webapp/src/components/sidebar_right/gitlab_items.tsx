@@ -124,9 +124,9 @@ function GitlabItems({item, theme}: GitlabItemsProps) {
             <SignIcon/>
             {item.milestone.title}
         </span>
-    ) : null;
+    ) : undefined;
 
-    const labels: JSX.Element[] | undefined = item.labels_with_details ? getGitlabLabels(item.labels_with_details) : null;
+    const labels: JSX.Element[] | undefined = item.labels_with_details ? getGitlabLabels(item.labels_with_details) : undefined;
 
     let hasConflict: React.ReactNode | undefined;
     if (item.has_conflicts) {
