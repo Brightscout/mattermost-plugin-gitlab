@@ -113,7 +113,6 @@ func (p *Plugin) replacementOfMessage(r replacement, glClient *gitlab.Client, in
 	// If this is not a file, ignore.
 	if file == nil {
 		p.API.LogWarn("Permalink is not a file", "file", r.permalinkData.path)
-
 		return
 	}
 
