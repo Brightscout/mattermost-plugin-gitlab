@@ -6,7 +6,7 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Fri Jul 22 10:20:44 2022
+# Make data base, printed on Mon Jul 25 11:11:56 2022
 
 # Variables
 
@@ -25,9 +25,10 @@ XDG_SESSION_CLASS = user
 # environment
 XDG_SESSION_TYPE = x11
 # environment
+ 
 VSCODE_LOG_NATIVE = false
 # environment
-NVM_INC = /home/jtg-d126/.nvm/versions/node/v16.13.0/include/node
+NVM_INC = /home/jtg-d126/.nvm/versions/node/v8.0.0/include/node
 # automatic
 ?D = $(patsubst %/,%,$(dir $?))
 # environment
@@ -57,15 +58,15 @@ GO_BUILD_FLAGS =  -ldflags '-X "github.com/mattermost/mattermost-plugin-api/expe
 # environment
 _ = /usr/bin/code
 # environment
-JOURNAL_STREAM = 8:52676
+JOURNAL_STREAM = 8:50139
 # environment
 XDG_CONFIG_DIRS = /etc/xdg/xdg-ubuntu:/etc/xdg
 # makefile (from 'Makefile', line 5)
 MANIFEST_FILE = plugin.json
 # makefile (from 'build/custom.mk', line 1)
 MAKEFILE_LIST :=  Makefile build/setup.mk build/legacy.mk build/custom.mk
-# environment
-MM_ADMIN_PASSWORD = Nitya@1qaz
+# automatic
+@F = $(notdir $@)
 # environment
 GIO_LAUNCHED_DESKTOP_FILE = /usr/share/applications/code.desktop
 # makefile (from 'Makefile', line 14)
@@ -81,13 +82,13 @@ XDG_DATA_DIRS = /usr/share/ubuntu:/usr/local/share/:/usr/share/:/var/lib/snapd/d
 # environment
 VSCODE_AMD_ENTRYPOINT = vs/workbench/api/node/extensionHostProcess
 # environment
-DBUS_SESSION_BUS_ADDRESS = unix:path=/run/user/1000/bus,guid=0aa6a74a159ca3442ad1890b62cce11d
+DBUS_SESSION_BUS_ADDRESS = unix:path=/run/user/1000/bus,guid=1d128b4f839081f1e355606762dd2e8d
 # environment
 VSCODE_VERBOSE_LOGGING = true
 # environment
-MANAGERPID = 1612
-# automatic
-@F = $(notdir $@)
+MANAGERPID = 1523
+# makefile (from 'build/setup.mk', line 14)
+PLUGIN_ID = $(shell build/bin/manifest id)
 # makefile (from 'build/setup.mk', line 32)
 HAS_PUBLIC = $(wildcard public/.)
 # environment
@@ -99,23 +100,21 @@ GOPROXY = https://proxy.golang.org,direct
 # default
 MAKE_HOST := x86_64-pc-linux-gnu
 # environment
-PATH = /usr/local/go/bin:/home/jtg-d126/.nvm/versions/node/v16.13.0/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/home/jtg-d126/go/bin
+PATH = /usr/local/go/bin:/home/jtg-d126/.nvm/versions/node/v8.0.0/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/home/jtg-d126/go/bin
 # environment
 GPG_AGENT_INFO = /run/user/1000/gnupg/S.gpg-agent:0:1
 # environment
-SESSION_MANAGER = local/jtgd126-Latitude-3400:@/tmp/.ICE-unix/1839,unix/jtgd126-Latitude-3400:/tmp/.ICE-unix/1839
+SESSION_MANAGER = local/jtgd126-Latitude-3400:@/tmp/.ICE-unix/1757,unix/jtgd126-Latitude-3400:/tmp/.ICE-unix/1757
 # makefile (from 'Makefile', line 27)
 BUNDLE_NAME = $(PLUGIN_ID)-$(PLUGIN_VERSION).tar.gz
 # environment
 XDG_RUNTIME_DIR = /run/user/1000
-# makefile (from 'build/setup.mk', line 14)
-PLUGIN_ID = $(shell build/bin/manifest id)
 # makefile (from 'Makefile', line 11)
 DEFAULT_GOOS := linux
 # environment
 GOPATH = /home/jtg-d126/go
 # environment
-NVM_BIN = /home/jtg-d126/.nvm/versions/node/v16.13.0/bin
+NVM_BIN = /home/jtg-d126/.nvm/versions/node/v8.0.0/bin
 # makefile (from 'Makefile', line 17)
 ASSETS_DIR = assets
 # environment
@@ -125,7 +124,7 @@ VSCODE_LOG_STACK = false
 # environment
 ELECTRON_RUN_AS_NODE = 1
 # environment
-INVOCATION_ID = c02d5016e17d478aba57303930f42e06
+INVOCATION_ID = 4dd9836de0834c79bed07ce1e42cf3cf
 # default
 .FEATURES := target-specific order-only second-expansion else-if shortest-stem undefine oneshell archives jobserver output-sync check-symlink load
 # environment
@@ -137,7 +136,7 @@ XDG_SESSION_DESKTOP = ubuntu
 # environment
 SSH_AUTH_SOCK = /run/user/1000/keyring/ssh
 # environment
-GIO_LAUNCHED_DESKTOP_FILE_PID = 4065398
+GIO_LAUNCHED_DESKTOP_FILE_PID = 6597
 # automatic
 %F = $(notdir $%)
 # environment
@@ -151,7 +150,7 @@ PWD = /home/jtg-d126/mattermost-plugin-gitlab
 # default
 .LOADED := 
 # environment
-SSH_AGENT_PID = 1800
+SSH_AGENT_PID = 1718
 # environment
 ORIGINAL_XDG_CURRENT_DESKTOP = ubuntu:GNOME
 # environment
@@ -199,7 +198,7 @@ SHLVL = 1
 # environment
 GNOME_SHELL_SESSION_MODE = ubuntu
 # environment
-VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-ca6e64de-b02b-48dc-89d5-376f3c03c43a.sock
+VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-cda4f90b-26ac-423e-8fc2-da27b06ee84b.sock
 # default
 MAKE_VERSION := 4.2.1
 # environment
@@ -252,16 +251,12 @@ QT_ACCESSIBILITY = 1
 DEFAULTS_PATH = /usr/share/gconf/ubuntu.default.path
 # makefile (from 'Makefile', line 7)
 GO_TEST_FLAGS = -race
-# environment
-MM_SERVICESETTINGS_SITEURL = http://localhost:8065
 # 'override' directive
 .SHELLSTATUS := 0
 # default
 MAKEFILES := 
 # automatic
 <F = $(notdir $<)
-# environment
-MM_ADMIN_USERNAME = Nityanand13
 # environment
 LC_ALL = C
 # makefile (from 'build/setup.mk', line 29)
@@ -271,12 +266,11 @@ DBUS_STARTER_BUS_TYPE = session
 # environment
 GJS_DEBUG_TOPICS = JS ERROR;JS LOG
 # environment
-GNOME_TERMINAL_SCREEN = /org/gnome/Terminal/screen/8a944673_e9fb_4f9d_bcaf_c1f1c055c36a
+GNOME_TERMINAL_SCREEN = /org/gnome/Terminal/screen/617318fe_c947_4ecd_945b_e263103877ac
 # automatic
 ^F = $(notdir $^)
 # environment
- 
-GNOME_TERMINAL_SERVICE = :1.7656
+GNOME_TERMINAL_SERVICE = :1.78
 # default
 SUFFIXES := 
 # environment
@@ -294,13 +288,13 @@ LANG = C
 # environment
 TERM = xterm-256color
 # environment
-VSCODE_PID = 4065398
+VSCODE_PID = 6597
 # environment
-DBUS_STARTER_ADDRESS = unix:path=/run/user/1000/bus,guid=0aa6a74a159ca3442ad1890b62cce11d
+DBUS_STARTER_ADDRESS = unix:path=/run/user/1000/bus,guid=1d128b4f839081f1e355606762dd2e8d
 # makefile (from 'build/setup.mk', line 35)
 HAS_MM_UTILITIES = $(wildcard $(MM_UTILITIES_DIR)/.)
 # variable set hash-table stats:
-# Load=144/1024=14%, Rehash=0, Collisions=29/328=9%
+# Load=141/1024=14%, Rehash=0, Collisions=25/325=8%
 
 # Pattern-specific Variable Values
 
@@ -425,7 +419,8 @@ bundle:
 # Not a target:
 Makefile:
 #  Implicit rule search has been done.
-#  Last modified 2022-07-13 16:16:01.124062
+ 
+#  Last modified 2022-07-22 20:30:39.700243703
 #  File has been updated.
 #  Successfully updated.
 
@@ -564,7 +559,6 @@ detach: setup-attach
 
 # Not a target:
 .DEFAULT:
- 
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
@@ -660,6 +654,7 @@ disable: detach
 mock:
 #  Phony target (prerequisite of .PHONY).
 #  Implicit rule search has not been done.
+ 
 #  File does not exist.
 #  File has not been updated.
 #  recipe to execute (from 'build/custom.mk', line 12):
@@ -681,6 +676,6 @@ mock:
 # strcache performance: lookups = 198 / hit rate = 69%
 # hash-table stats:
 # Load=61/8192=1%, Rehash=0, Collisions=1/198=1%
-# Finished Make data base on Fri Jul 22 10:20:44 2022
+# Finished Make data base on Mon Jul 25 11:11:56 2022
 
  
