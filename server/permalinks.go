@@ -146,7 +146,6 @@ func (p *Plugin) replacementOfMessage(r replacement, glClient *gitlab.Client, in
 	}
 
 	markDownForPermalink[index] = getCodeMarkdown(r.permalinkData.user, r.permalinkData.repo, r.permalinkData.path, r.word, lines, isTruncated)
-	
 }
 
 // makeReplacements performs the given replacements on the msg and returns
