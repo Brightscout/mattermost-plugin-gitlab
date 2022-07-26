@@ -182,12 +182,12 @@ function SidebarRight({theme}: {theme: Theme}) {
 
     switch (rhsState) {
     case RHSStates.PRS:
-        gitlabItems = yourPrs;
+        gitlabItems = updatedPrs;
         title = 'Your Open Merge Requests';
         listUrl = `${baseURL}${orgQuery}/merge_requests?state=opened&author_username=${username}`;
         break;
     case RHSStates.REVIEWS:
-        gitlabItems = reviews;
+        gitlabItems = updatedReviews;
         listUrl = `${baseURL}${orgQuery}/merge_requests?reviewer_username=${username}`;
         title = 'Merge Requests Needing Review';
         break;
@@ -208,20 +208,18 @@ function SidebarRight({theme}: {theme: Theme}) {
     let renderedGitlabItems: React.ReactNode = <div style={style.container}>{'You have no active items'}</div>;
     if (gitlabItems?.length) {
         renderedGitlabItems = gitlabItems.map((item) => (
-            <I18nProvider
-                currentLocale={getUserLocale}
+            <GitlabItems
                 key={item.id}
-            >
-                <GitlabItems
-                    item={item}
-                    theme={theme}
-                />
-            </I18nProvider>
+                item={item}
+                theme={theme}
+            />
         ));
     }
 
     return (
-        <>
+        <I18nProvider
+            currentLocale={getUserLocale}
+        >
             <Scrollbars
                 autoHide={true}
                 autoHideTimeout={AUTO_HIDE_TIMEOUT} // Hide delay in ms
@@ -243,7 +241,7 @@ function SidebarRight({theme}: {theme: Theme}) {
                 </div>
                 {renderedGitlabItems}
             </Scrollbars>
-        </>
+        </I18nProvider>
     );
 }
 
