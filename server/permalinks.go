@@ -90,7 +90,7 @@ func (p *Plugin) getPermalinkReplacements(msg string) []replacement {
 	return replacements
 }
 
-func (p *Plugin) replacementOfMessage(r replacement, glClient *gitlab.Client, wg *sync.WaitGroup, markDownForPermalink []string, index int) {
+func (p *Plugin) processReplacement(r replacement, glClient *gitlab.Client, wg *sync.WaitGroup, markdownForPermalink []string, index int) {
 	defer wg.Done()
 	// Quick bailout if the commit hash is not proper.
 	if _, err := hex.DecodeString(r.permalinkData.commit); err != nil {
@@ -144,7 +144,7 @@ func (p *Plugin) replacementOfMessage(r replacement, glClient *gitlab.Client, wg
 		return
 	}
 
-	markDownForPermalink[index] = getCodeMarkdown(r.permalinkData.user, r.permalinkData.repo, r.permalinkData.path, r.word, lines, isTruncated)
+	markdownForPermalink[index] = getCodeMarkdown(r.permalinkData.user, r.permalinkData.repo, r.permalinkData.path, r.word, lines, isTruncated)
 }
 
 // makeReplacements performs the given replacements on the msg and returns
@@ -152,17 +152,17 @@ func (p *Plugin) replacementOfMessage(r replacement, glClient *gitlab.Client, wg
 func (p *Plugin) makeReplacements(msg string, replacements []replacement, glClient *gitlab.Client) string {
 	// Iterating the slice in reverse to preserve the replacement indices.
 	wg := new(sync.WaitGroup)
-	markDownForPermalink := make([]string, len(replacements))
+	markdownForPermalink := make([]string, len(replacements))
 	for i := len(replacements) - 1; i >= 0; i-- {
 		wg.Add(1)
-		go p.replacementOfMessage(replacements[i], glClient, wg, markDownForPermalink, i)
+		go p.processReplacement(replacements[i], glClient, wg, markdownForPermalink, i)
 	}
 	wg.Wait()
 	for i := len(replacements) - 1; i >= 0; i-- {
 		r := replacements[i]
-		if markDownForPermalink[i] != "" {
+		if markdownForPermalink[i] != "" {
 			// Replace word in msg starting from r.index only once.
-			msg = msg[:r.index] + strings.Replace(msg[r.index:], r.word, markDownForPermalink[i], 1)
+			msg = msg[:r.index] + strings.Replace(msg[r.index:], r.word, markdownForPermalink[i], 1)
 		}
 	}
 	return msg
