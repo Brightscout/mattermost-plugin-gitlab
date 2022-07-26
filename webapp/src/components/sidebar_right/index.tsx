@@ -68,13 +68,9 @@ function mapGitlabItemListToPrList(gilist: Item[]) {
     });
 }
 
-function shouldUpdateDetails(prs: Item[], prevPrs: Item[], targetState: string, currentState: string, prevState: string) {
+function shouldUpdateDetails(prs: Item[], prevPrs: Item[], targetState: string, currentState: string) {
     if (currentState !== targetState) {
         return false;
-    }
-
-    if (currentState !== prevState) {
-        return true;
     }
 
     if (prs.length !== prevPrs.length) {
@@ -127,18 +123,18 @@ function SidebarRight({theme}: {theme: Theme}) {
         };
     });
 
-    // States used for storing the updated details of PRs, reviews, and RHSState after being taken from the redux store.
-    const [updatedPrs, setUpdatedPrs] = useState<Item[]>(yourPrs);
-    const [RHSState, setRHSState] = useState('');
-    const [updatedReviews, setUpdatedReviews] = useState<Item[]>(reviews);
+    // States used for storing the PRs/Reviews along with their details which are present separately in redux state.
+    const [prsWithDetails, setPrsWithDetails] = useState<Item[]>(yourPrs);
+    const [reviewsWithDetails, setReviewsWithDetails] = useState<Item[]>(reviews);
+
     const dispatch = useDispatch();
 
     useEffect(() => {
-        setUpdatedReviews(mapPrsToDetails(reviews, reviewDetails));
+        setReviewsWithDetails(mapPrsToDetails(reviews, reviewDetails));
     }, [reviews, reviewDetails]);
 
     useEffect(() => {
-        setUpdatedPrs(mapPrsToDetails(yourPrs, yourPrDetails));
+        setPrsWithDetails(mapPrsToDetails(yourPrs, yourPrDetails));
     }, [yourPrs, yourPrDetails]);
 
     useEffect(() => {
@@ -155,17 +151,15 @@ function SidebarRight({theme}: {theme: Theme}) {
     }, []);
 
     useEffect(() => {
-        if (shouldUpdateDetails(yourPrs, updatedPrs, RHSStates.PRS, rhsState, RHSState)) {
-            setUpdatedPrs(yourPrs);
-            setRHSState(rhsState);
+        if (shouldUpdateDetails(yourPrs, prsWithDetails, RHSStates.PRS, rhsState)) {
+            setPrsWithDetails(yourPrs);
             dispatch(getYourPrDetails(mapGitlabItemListToPrList(yourPrs)));
         }
     }, [yourPrs, rhsState]);
 
     useEffect(() => {
-        if (shouldUpdateDetails(reviews, updatedReviews, RHSStates.REVIEWS, rhsState, RHSState)) {
-            setUpdatedReviews(reviews);
-            setRHSState(rhsState);
+        if (shouldUpdateDetails(reviews, reviewsWithDetails, RHSStates.REVIEWS, rhsState)) {
+            setReviewsWithDetails(reviews);
             dispatch(getReviewDetails(mapGitlabItemListToPrList(reviews)));
         }
     }, [reviews, rhsState]);
@@ -183,12 +177,12 @@ function SidebarRight({theme}: {theme: Theme}) {
 
     switch (rhsState) {
     case RHSStates.PRS:
-        gitlabItems = updatedPrs;
+        gitlabItems = prsWithDetails;
         title = 'Your Open Merge Requests';
         listUrl = `${baseURL}${orgQuery}/merge_requests?state=opened&author_username=${username}`;
         break;
     case RHSStates.REVIEWS:
-        gitlabItems = updatedReviews;
+        gitlabItems = reviewsWithDetails;
         listUrl = `${baseURL}${orgQuery}/merge_requests?reviewer_username=${username}`;
         title = 'Merge Requests Needing Review';
         break;
