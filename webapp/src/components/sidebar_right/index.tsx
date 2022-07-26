@@ -5,7 +5,9 @@ import React, {useEffect, useState} from 'react';
 import Scrollbars from 'react-custom-scrollbars';
 import {useDispatch, useSelector} from 'react-redux';
 
+import {getCurrentUserLocale} from 'mattermost-redux/selectors/entities/i18n';
 import {Theme} from 'mattermost-redux/types/preferences';
+import {GlobalState} from 'mattermost-redux/types/store';
 import {makeStyleFromTheme, changeOpacity} from 'mattermost-redux/utils/theme_utils';
 
 import {getYourPrDetails, getReviewDetails} from 'src/actions';
@@ -108,7 +110,7 @@ function mapPrsToDetails(prs: Item[], details: Item[]) {
 }
 
 function SidebarRight({theme}: {theme: Theme}) {
-    const {username, yourAssignments, org, unreads, gitlabURL, rhsState, reviews, yourPrs, reviewDetails, yourPrDetails} = useSelector((state) => {
+    const {username, yourAssignments, org, unreads, gitlabURL, rhsState, reviews, yourPrs, reviewDetails, yourPrDetails, getUserLocale} = useSelector((state: GlobalState) => {
         const store = getPluginState(state);
         return {
             username: store.username,
@@ -121,6 +123,7 @@ function SidebarRight({theme}: {theme: Theme}) {
             org: store.organization,
             gitlabURL: store.gitlabURL,
             rhsState: store.rhsState,
+            getUserLocale: getCurrentUserLocale(state),
         };
     });
 
@@ -206,6 +209,7 @@ function SidebarRight({theme}: {theme: Theme}) {
     if (gitlabItems?.length) {
         renderedGitlabItems = gitlabItems.map((item) => (
             <I18nProvider
+                currentLocale={getUserLocale}
                 key={item.id}
             >
                 <GitlabItems

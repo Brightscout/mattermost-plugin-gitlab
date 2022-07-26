@@ -14,43 +14,43 @@ import {GitlabItemsProps, Label, LocalizedString} from 'src/types/gitlab_items';
 
 export const notificationReasons: Record<string, LocalizedString> = {
     assigned: {
-        id: 'action.assigned',
+        id: 'com.github.manland.mattermost-plugin-gitlab.action.assigned',
         message: 'You were assigned to the issue/merge request',
     },
     review_requested: {
-        id: 'action.review_requested',
+        id: 'com.github.manland.mattermost-plugin-gitlab.action.review_requested',
         message: 'You were asked to review a merge request.',
     },
     mentioned: {
-        id: 'action.mentioned',
+        id: 'com.github.manland.mattermost-plugin-gitlab.action.mentioned',
         message: 'You were specifically @mentioned in the content.',
     },
     build_failed: {
-        id: 'action.build_failed',
+        id: 'com.github.manland.mattermost-plugin-gitlab.action.build_failed',
         message: 'Gitlab build was failed.',
     },
     marked: {
-        id: 'action.marked',
+        id: 'com.github.manland.mattermost-plugin-gitlab.action.marked',
         message: 'Task is marked as done.',
     },
     approval_required: {
-        id: 'action.approval_required',
+        id: 'com.github.manland.mattermost-plugin-gitlab.action.approval_required',
         message: 'Your approval is required on this issue/merge request.',
     },
     unmergeable: {
-        id: 'action.unmergeable',
+        id: 'com.github.manland.mattermost-plugin-gitlab.action.unmergeable',
         message: 'This merge request can not be merged.',
     },
     directly_addressed: {
-        id: 'action.directly_addressed',
+        id: 'com.github.manland.mattermost-plugin-gitlab.action.directly_addressed',
         message: 'You were directly addressed.',
     },
     merge_train_removed: {
-        id: 'action.merge_train_removed',
+        id: 'com.github.manland.mattermost-plugin-gitlab.action.merge_train_removed',
         message: 'A merge train was removed.',
     },
     attention_required: {
-        id: 'action.attention_required',
+        id: 'com.github.manland.mattermost-plugin-gitlab.action.attention_required',
         message: 'Your attention is required on the issue/merge request.',
     },
 };

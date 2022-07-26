@@ -4,11 +4,11 @@ import {IntlProvider} from 'react-intl';
 import {getTranslations} from 'i18n';
 
 export type Props = {
-    currentLocale?: string,
+    currentLocale: string,
     children: React.ReactNode
 }
 
-function I18nProvider({currentLocale = '', children}: Props) {
+function I18nProvider({currentLocale, children}: Props) {
     return (
         <IntlProvider
             locale={currentLocale}
