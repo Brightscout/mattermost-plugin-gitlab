@@ -170,16 +170,17 @@ func (p *Plugin) MessageWillBePosted(c *plugin.Context, post *model.Post) (*mode
 		return nil, ""
 	}
 	info, err := p.getGitlabUserInfoByMattermostID(post.UserId)
-	if err != nil && err.ID == APIErrorIDNotConnected {
-		p.API.LogDebug("Processing permalink of the post", err.Message)
-	}
 	if err != nil {
-		p.API.LogDebug("Error in getting user info", "error", err.Message)
+		if err.ID == APIErrorIDNotConnected {
+			p.API.LogDebug("Error while processing permalinks in the post", "Error", err.Error())
+		} else {
+			p.API.LogDebug("Error in getting user info", "Error", err.Error())
+		}
 		return nil, ""
 	}
 	glClient, cErr := p.GitlabClient.GitlabConnect(*info.Token)
 	if cErr != nil {
-		p.API.LogDebug("Error in getting GitLab client", "error", cErr.Error())
+		p.API.LogDebug("Error in getting GitLab client", "Error", cErr.Error())
 		return nil, ""
 	}
 	post.Message = p.makeReplacements(msg, replacements, glClient)
@@ -305,7 +306,7 @@ func (p *Plugin) getGitlabUserInfoByMattermostID(userID string) (*gitlab.UserInf
 
 	unencryptedToken, err := decrypt([]byte(config.EncryptionKey), userInfo.Token.AccessToken)
 	if err != nil {
-		p.API.LogDebug("Can't decrypt token", "err", err.Error())
+		p.API.LogError("can't decrypt token", "err", err.Error())
 		return nil, &APIErrorResponse{ID: "", Message: "Unable to decrypt access token.", StatusCode: http.StatusInternalServerError}
 	}
 
@@ -421,7 +422,7 @@ func (p *Plugin) registerChimeraURL() {
 func (p *Plugin) CreateBotDMPost(userID, message, postType string) *model.AppError {
 	channel, err := p.API.GetDirectChannel(userID, p.BotUserID)
 	if err != nil {
-		p.API.LogError("couldn't get bot's DM channel", "user_id", userID)
+		p.API.LogError("Couldn't get bot's DM channel", "user_id", userID)
 		return err
 	}
 
