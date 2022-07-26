@@ -387,6 +387,7 @@ func TestMakeReplacements(t *testing.T) {
 	}
 
 	mockPluginAPI.AssertCalled(t, "LogError", "bad git commit hash in permalink", "error", "encoding/hex: invalid byte: U+0068 'h'", "hash", "badhash")
+	mockPluginAPI.AssertCalled(t, "LogError", "Error while fetching file contents", "error", "unmarshalling failed for both file and directory content: unexpected end of JSON input and unexpected end of JSON input", "path", "path/file.go")
 }
 
 const (

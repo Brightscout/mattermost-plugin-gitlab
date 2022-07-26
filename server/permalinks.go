@@ -90,7 +90,7 @@ func (p *Plugin) getPermalinkReplacements(msg string) []replacement {
 	return replacements
 }
 
-func (p *Plugin) replacementOfMessage(r replacement, glClient *gitlab.Client, index int, wg *sync.WaitGroup, markDownForPermalink map[int]string) {
+func (p *Plugin) replacementOfMessage(r replacement, glClient *gitlab.Client, wg *sync.WaitGroup, markDownForPermalink []string, index int) {
 	defer wg.Done()
 	// Quick bailout if the commit hash is not proper.
 	if _, err := hex.DecodeString(r.permalinkData.commit); err != nil {
@@ -151,18 +151,18 @@ func (p *Plugin) replacementOfMessage(r replacement, glClient *gitlab.Client, in
 // the new msg. The replacements slice needs to be sorted by the index in ascending order.
 func (p *Plugin) makeReplacements(msg string, replacements []replacement, glClient *gitlab.Client) string {
 	// Iterating the slice in reverse to preserve the replacement indices.
-	wg := sync.WaitGroup{}
-	var markDownForPermalink = make(map[int]string)
+	wg := new(sync.WaitGroup)
+	markDownForPermalink := make([]string, len(replacements))
 	for i := len(replacements) - 1; i >= 0; i-- {
 		wg.Add(1)
-		go p.replacementOfMessage(replacements[i], glClient, i, &wg, markDownForPermalink)
+		go p.replacementOfMessage(replacements[i], glClient, wg, markDownForPermalink, i)
 	}
 	wg.Wait()
 	for i := len(replacements) - 1; i >= 0; i-- {
 		r := replacements[i]
-		if val, ok := markDownForPermalink[i]; ok {
+		if markDownForPermalink[i] != "" {
 			// Replace word in msg starting from r.index only once.
-			msg = msg[:r.index] + strings.Replace(msg[r.index:], r.word, val, 1)
+			msg = msg[:r.index] + strings.Replace(msg[r.index:], r.word, markDownForPermalink[i], 1)
 		}
 	}
 	return msg
