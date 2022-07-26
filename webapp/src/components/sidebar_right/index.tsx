@@ -3,15 +3,17 @@
 
 import React, {useEffect, useState} from 'react';
 import Scrollbars from 'react-custom-scrollbars';
+import {useDispatch, useSelector} from 'react-redux';
+
 import {Theme} from 'mattermost-redux/types/preferences';
 import {makeStyleFromTheme, changeOpacity} from 'mattermost-redux/utils/theme_utils';
 
 import {getYourPrDetails, getReviewDetails} from 'src/actions';
 import {RHSStates} from 'src/constants';
+import {getPluginState} from 'src/selectors';
 import {Item} from 'src/types/gitlab_items';
 
-import {getPluginState} from 'src/selectors';
-import {useDispatch, useSelector} from 'react-redux';
+import I18nProvider from '../i18n_provider';
 
 import GitlabItems from './gitlab_items';
 
@@ -91,12 +93,7 @@ function mapPrsToDetails(prs: Item[], details: Item[]) {
     }
 
     return prs.map((pr) => {
-        let foundDetails;
-        if (details) {
-            foundDetails = details.find((prDetails) => {
-                return (pr.project_id === prDetails.project_id) && (pr.sha === prDetails.sha);
-            });
-        }
+        const foundDetails = details && details.find((prDetails) => pr.project_id === prDetails.project_id && pr.sha === prDetails.sha);
         if (!foundDetails) {
             return pr;
         }
@@ -208,13 +205,17 @@ function SidebarRight({theme}: {theme: Theme}) {
     let renderedGitlabItems: React.ReactNode = <div style={style.container}>{'You have no active items'}</div>;
     if (gitlabItems?.length) {
         renderedGitlabItems = gitlabItems.map((item) => (
-            <GitlabItems
+            <I18nProvider
                 key={item.id}
-                item={item}
-                theme={theme}
-            />
+            >
+                <GitlabItems
+                    item={item}
+                    theme={theme}
+                />
+            </I18nProvider>
         ));
     }
+
     return (
         <>
             <Scrollbars

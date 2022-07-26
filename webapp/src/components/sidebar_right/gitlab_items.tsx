@@ -10,9 +10,9 @@ import DotIcon from 'src/images/icons/dot';
 import TickIcon from 'src/images/icons/tick';
 import SignIcon from 'src/images/icons/sign';
 import {formatTimeSince} from 'src/utils/date_utils';
-import {GitlabItemsProps, Label, NotificationType} from 'src/types/gitlab_items';
+import {GitlabItemsProps, Label, LocalizedString} from 'src/types/gitlab_items';
 
-export const notificationReasons: Record<string, NotificationType> = {
+export const notificationReasons: Record<string, LocalizedString> = {
     assigned: {
         id: 'action.assigned',
         message: 'You were assigned to the issue/merge request',

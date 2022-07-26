@@ -65,7 +65,7 @@ export interface GitlabItemsProps {
     theme: Theme;
 }
 
-export interface NotificationType {
+export interface LocalizedString {
     id: string;
     message: string;
 }
