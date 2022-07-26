@@ -127,7 +127,7 @@ function SidebarRight({theme}: {theme: Theme}) {
         };
     });
 
-    // States used for store the updated details of PRs, reviews, and RHSState after taking from redux store.
+    // States used for storing the updated details of PRs, reviews, and RHSState after being taken from the redux store.
     const [updatedPrs, setUpdatedPrs] = useState<Item[]>(yourPrs);
     const [RHSState, setRHSState] = useState('');
     const [updatedReviews, setUpdatedReviews] = useState<Item[]>(reviews);
