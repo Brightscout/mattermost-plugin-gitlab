@@ -376,7 +376,7 @@ func (g *gitlab) GetLabelDetails(client *internGitlab.Client, pid int, labels in
 		return nil, respErr
 	}
 	if err != nil {
-		return nil, errors.Wrap(err, "can't get label list in GitLab api")
+		return nil, errors.Wrap(err, "can't get list of labels in GitLab")
 	}
 
 	allLabels := map[string]*internGitlab.Label{}
