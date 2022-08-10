@@ -183,10 +183,7 @@ function GitlabItems({item, theme}: GitlabItemsProps) {
                 className='light'
                 style={style.subtitle}
             >
-                {item.created_at && 'Opened'}
-                {item.created_at && ` ${formatTimeSince(item.created_at)} ago`}
-                {userName && ` by ${userName}`}
-                {'.'}
+                {item.created_at && `Opened ${formatTimeSince(item.created_at)} ago ${userName && ` by ${userName}.`}`}
                 {milestone}
             </div>
             <div
@@ -195,10 +192,7 @@ function GitlabItems({item, theme}: GitlabItemsProps) {
             >
                 {item.action_name && (
                     <>
-                        <div>
-                            {item.updated_at && 'Updated'}
-                            {item.updated_at && `${formatTimeSince(item.updated_at)} ago`}
-                        </div>
+                        <div>{item.updated_at && `${formatTimeSince(item.updated_at)} ago`}</div>
                         {notificationReasons[item.action_name]}
                     </>
                 )}
