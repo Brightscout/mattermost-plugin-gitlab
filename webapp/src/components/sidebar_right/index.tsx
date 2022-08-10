@@ -89,7 +89,7 @@ function mapPrsToDetails(prs: Item[], details: Item[]) {
 }
 
 function SidebarRight({theme}: {theme: Theme}) {
-    const sidebarData = getSidebarData(useSelector((state) => state));
+    const sidebarData = useSelector(getSidebarData);
     const {username, yourAssignments, org, unreads, gitlabURL, rhsState, reviews, yourPrs, reviewDetails, yourPrDetails} = sidebarData;
 
     // States used for storing the PRs/Reviews along with their details which are present separately in redux state.
