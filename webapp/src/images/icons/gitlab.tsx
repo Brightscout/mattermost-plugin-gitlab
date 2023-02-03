@@ -8,7 +8,7 @@ interface PropTypes {
 };
 
 const GitLabIcon = ({type}: PropTypes) => {
-    const iconStyle = type === 'menu' ? {flex: '0 0 auto', width: '25px', height: '20px', padding: '2px'} : {};
+    const iconStyle = type === 'menu' ? {flex: '0 0 auto', width: '20px', height: '20px', padding: '2px', marginRight: '4px'} : {};
     
     return (
         <span className='MenuItem__icon'>
@@ -16,7 +16,7 @@ const GitLabIcon = ({type}: PropTypes) => {
                 aria-hidden='true'
                 focusable='false'
                 role='img'
-                viewBox='0 0 24 24'
+                viewBox='0 0 25 25'
                 width='14'
                 height='14'
                 style={iconStyle}
