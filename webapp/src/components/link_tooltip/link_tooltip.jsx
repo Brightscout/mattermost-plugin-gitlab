@@ -44,21 +44,20 @@ export const LinkTooltip = ({href, connected, gitlabURL}) => {
                     res = await Client.getPullRequest(owner, repo, number);
                     break;
                 }
+
                 if (res) {
                     res = {...res, owner, repo, type};
+                    setData(res);
                 }
-                setData(res);
             }
         };
 
-        if (data) {
+        if (!connected) {
             return;
         }
 
-        if (connected) {
-            init();
-        }
-    }, []);
+        init();
+    }, [connected, href]);
 
     const getIconElement = () => {
         let color;
@@ -94,94 +93,95 @@ export const LinkTooltip = ({href, connected, gitlabURL}) => {
         return icon;
     };
 
-    if (data) {
-        const date = new Date(data.created_at).toDateString();
+    if (!data) {
+        return null
+    }
 
-        return (
-            <div className='gitlab-tooltip'>
-                <div className='gitlab-tooltip box gitlab-tooltip--large gitlab-tooltip--bottom-left p-4'>
-                    <div className='header mb-1'>
-                        <a
-                            title={data.repo}
-                            href={href}
-                        >
-                            {data.repo}
+    const date = new Date(data.created_at).toDateString();
+
+    return (
+        <div className='gitlab-tooltip'>
+            <div className='gitlab-tooltip box gitlab-tooltip--large gitlab-tooltip--bottom-left p-4'>
+                <div className='header mb-1'>
+                    <a
+                        title={data.repo}
+                        href={href}
+                    >
+                        {data.repo}
+                    </a>
+                    {' on '}
+                    <span>{date}</span>
+                </div>
+
+                <div className='body d-flex mt-2'>
+                    <span className='pt-1 pb-1 pr-2'>
+                        {getIconElement()}
+                    </span>
+
+                    {/* info */}
+                    <div className='tooltip-info mt-1'>
+                        <a href={href}>
+                            <h5 className='mr-1'>{data.title}</h5>
+                            <span className='mr-number'>#{data.iid}</span>
                         </a>
-                        {' on '}
-                        <span>{date}</span>
-                    </div>
+                        <div className='markdown-text mt-1 mb-1'>
+                            <ReactMarkdown
+                                source={data.description}
+                                disallowedTypes={['heading']}
+                                linkTarget='_blank'
+                            />
+                        </div>
 
-                    <div className='body d-flex mt-2'>
-                        <span className='pt-1 pb-1 pr-2'>
-                            {getIconElement()}
-                        </span>
-
-                        {/* info */}
-                        <div className='tooltip-info mt-1'>
-                            <a href={href}>
-                                <h5 className='mr-1'>{data.title}</h5>
-                                <span className='mr-number'>#{data.iid}</span>
-                            </a>
-                            <div className='markdown-text mt-1 mb-1'>
-                                <ReactMarkdown
-                                    source={data.description}
-                                    disallowedTypes={['heading']}
-                                    linkTarget='_blank'
-                                />
-                            </div>
-
-                            {/* base <- head */}
-                            {data.type === LINK_TYPES.MERGE_REQUESTS && (
-                                <div className='base-head mt-1 mr-3'>
-                                    <span
-                                        title={data.target_branch}
-                                        className='commit-ref'
-                                        style={{maxWidth: '140px'}}
-                                    >
-                                        {data.target_branch}
-                                    </span>
-                                    <span className='mx-1'>←</span>
-                                    <span
-                                        title={data.source_branch}
-                                        className='commit-ref'
-                                    >
-                                        {data.source_branch}
-                                    </span>
-                                </div>
-                            )}
-
-                            <div className='see-more mt-1'>
-                                <a
-                                    href={href}
-                                    target='_blank'
-                                    rel='noopener noreferrer'
+                        {/* base <- head */}
+                        {data.type === LINK_TYPES.MERGE_REQUESTS && (
+                            <div className='base-head mt-1 mr-3'>
+                                <span
+                                    title={data.target_branch}
+                                    className='commit-ref'
+                                    style={{maxWidth: '140px'}}
                                 >
-                                    See more
-                                </a>
+                                    {data.target_branch}
+                                </span>
+                                <span className='mx-1'>←</span>
+                                <span
+                                    title={data.source_branch}
+                                    className='commit-ref'
+                                >
+                                    {data.source_branch}
+                                </span>
                             </div>
+                        )}
 
-                            {/* Labels */}
-                            <div className='labels mt-3'>
-                                {data.labels && data.labels_with_details?.length && data.labels_with_details.map((label, index) => {
-                                    return (
-                                        <span
-                                            key={index}
-                                            className='label mr-1'
-                                            title={label.description}
-                                            style={{backgroundColor: label.color}}
-                                        >
-                                            <span style={{color: label.text_color}}>{label.name}</span>
-                                        </span>
-                                    );
-                                })}
-                            </div>
+                        <div className='see-more mt-1'>
+                            <a
+                                href={href}
+                                target='_blank'
+                                rel='noopener noreferrer'
+                            >
+                                See more
+                            </a>
+                        </div>
+
+                        {/* Labels */}
+                        <div className='labels mt-3'>
+                            {data.labels && data.labels_with_details?.length && data.labels_with_details.map((label, index) => {
+                                return (
+                                    <span
+                                        key={index}
+                                        className='label mr-1'
+                                        title={label.description}
+                                        style={{backgroundColor: label.color}}
+                                    >
+                                        <span style={{color: label.text_color}}>{label.name}</span>
+                                    </span>
+                                );
+                            })}
                         </div>
                     </div>
                 </div>
             </div>
-        );
-    }
-    return null;
+        </div>
+    );
 };
 
 LinkTooltip.propTypes = {

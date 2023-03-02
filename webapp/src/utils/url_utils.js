@@ -5,5 +5,5 @@ export const isValidUrl = (urlString) => {
     } catch (e) {
         return false;
     }
-    return url;
+    return true;
 };
