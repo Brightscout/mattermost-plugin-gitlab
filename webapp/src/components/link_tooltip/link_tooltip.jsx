@@ -24,6 +24,11 @@ const LINK_TYPES = {
     ISSUES: 'issues',
 };
 
+export function getInfoAboutLink(href,hostname) {
+    const [owner, repo, , type, number] = href.split(`${hostname}/`)[1].split('/');
+    return [owner, repo, type, number];
+}
+
 export const LinkTooltip = ({href, connected, gitlabURL}) => {
     const [data, setData] = useState(null);
     useEffect(() => {
@@ -34,7 +39,7 @@ export const LinkTooltip = ({href, connected, gitlabURL}) => {
         const url = new URL(href);
         const init = async () => {
             if (url.origin === gitlabURL && validateGitlabURL(href)) {
-                const [owner, repo, , type, number] = href.split(`${url.hostname}/`)[1].split('/');
+                const [owner, repo, type, number] = getInfoAboutLink(href,url.hostname);
                 let res;
                 switch (type) {
                 case LINK_TYPES.ISSUES:
