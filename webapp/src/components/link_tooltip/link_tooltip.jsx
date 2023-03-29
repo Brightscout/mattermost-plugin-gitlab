@@ -142,7 +142,6 @@ export const LinkTooltip = ({href, connected, gitlabURL}) => {
                                 <span
                                     title={data.target_branch}
                                     className='commit-ref'
-                                    style={{maxWidth: '140px'}}
                                 >
                                     {data.target_branch}
                                 </span>
@@ -168,10 +167,10 @@ export const LinkTooltip = ({href, connected, gitlabURL}) => {
 
                         {/* Labels */}
                         <div className='labels mt-3'>
-                            {data.labels && data.labels_with_details?.length && data.labels_with_details.map((label, index) => {
+                            {data.labels && data.labels_with_details?.length && data.labels_with_details.map((label) => {
                                 return (
                                     <span
-                                        key={index}
+                                        key={label.name}
                                         className='label mr-1'
                                         title={label.description}
                                         style={{backgroundColor: label.color}}
