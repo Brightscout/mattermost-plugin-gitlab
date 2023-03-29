@@ -24,10 +24,9 @@ const LINK_TYPES = {
     ISSUES: 'issues',
 };
 
-export function getInfoAboutLink(href,hostname) {
-    const [owner, repo, , type, number] = href.split(`${hostname}/`)[1].split('/');
-    return [owner, repo, type, number];
-}
+export const getInfoAboutLink = (href, hostname) => {
+    return href.split(`${hostname}/`)[1].split('/');
+};
 
 export const LinkTooltip = ({href, connected, gitlabURL}) => {
     const [data, setData] = useState(null);
@@ -39,7 +38,7 @@ export const LinkTooltip = ({href, connected, gitlabURL}) => {
         const url = new URL(href);
         const init = async () => {
             if (url.origin === gitlabURL && validateGitlabURL(href)) {
-                const [owner, repo, type, number] = getInfoAboutLink(href,url.hostname);
+                const [owner, repo, , type, number] = getInfoAboutLink(href, url.hostname);
                 let res;
                 switch (type) {
                 case LINK_TYPES.ISSUES:
@@ -99,7 +98,7 @@ export const LinkTooltip = ({href, connected, gitlabURL}) => {
     };
 
     if (!data) {
-        return null
+        return null;
     }
 
     const date = new Date(data.created_at).toDateString();
@@ -163,7 +162,7 @@ export const LinkTooltip = ({href, connected, gitlabURL}) => {
                                 target='_blank'
                                 rel='noopener noreferrer'
                             >
-                                See more
+                                {'See more'}
                             </a>
                         </div>
 
