@@ -24,9 +24,7 @@ const LINK_TYPES = {
     ISSUES: 'issues',
 };
 
-export const getInfoAboutLink = (href, hostname) => {
-    return href.split(`${hostname}/`)[1].split('/');
-};
+export const getInfoAboutLink = (href, hostname) => href.split(`${hostname}/`)[1].split('/');
 
 export const LinkTooltip = ({href, connected, gitlabURL}) => {
     const [data, setData] = useState(null);
@@ -122,7 +120,6 @@ export const LinkTooltip = ({href, connected, gitlabURL}) => {
                         {getIconElement()}
                     </span>
 
-                    {/* info */}
                     <div className='tooltip-info mt-1'>
                         <a href={href}>
                             <h5 className='mr-1'>{data.title}</h5>
@@ -136,7 +133,6 @@ export const LinkTooltip = ({href, connected, gitlabURL}) => {
                             />
                         </div>
 
-                        {/* base <- head */}
                         {data.type === LINK_TYPES.MERGE_REQUESTS && (
                             <div className='base-head mt-1 mr-3'>
                                 <span
