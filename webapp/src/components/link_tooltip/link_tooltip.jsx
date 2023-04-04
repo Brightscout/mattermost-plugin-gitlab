@@ -90,6 +90,8 @@ export const LinkTooltip = ({href, connected, gitlabURL}) => {
             color = data.state === STATE_TYPES.OPENED ? OPENED_COLOR : CLOSED_COLOR;
             iconType = data.state === STATE_TYPES.OPENED ? IssueOpenedIcon : IssueClosedIcon;
             break;
+        default:
+            console.log("this link type is not supported");
         }
         const icon = (
             <span style={{color}}>
