@@ -25,8 +25,8 @@ interface PropTypes {
     removeValidate: (key: string) => void;
 };
 
-export const getUsernameAndProjectName=(web_url: string) => {
-    const projectParts = web_url.split('/');
+export const getUsernameAndProjectName=(webUrl: string) => {
+    const projectParts = webUrl.split('/');
 
     // Extract "username/projectName" from the issueURL parts
     if (projectParts.length >= 5) {
