@@ -27,13 +27,12 @@ interface PropTypes {
 
 export const getUsernameAndProjectName=(web_url: string) => {
     const projectParts = web_url.split('/');
-    let prefix = '';
 
     // Extract "username/projectName" from the issueURL parts
     if (projectParts.length >= 5) {
-        prefix = `${projectParts[3]}/${projectParts[4]}`;
+        return`${projectParts[3]}/${projectParts[4]}`;
     }    
-    return prefix
+    return '';
 }
 
 const GitlabIssueSelector = ({name, required, theme, onChange, error, value, addValidate, removeValidate
@@ -82,8 +81,7 @@ const GitlabIssueSelector = ({name, required, theme, onChange, error, value, add
             }
 
             return issues.map((issue) => {
-                let prefix = getUsernameAndProjectName(issue.web_url)
-                return ({value: issue, label: `${prefix}, #${issue.iid}: ${issue.title}`});
+                return ({value: issue, label: `${getUsernameAndProjectName(issue.web_url)}, #${issue.iid}: ${issue.title}`});
             });
         } catch (e) {
             const err = e as ErrorType;
