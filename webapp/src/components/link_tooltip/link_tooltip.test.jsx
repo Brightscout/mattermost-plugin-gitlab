@@ -52,13 +52,25 @@ describe('getInfoAboutLink should work as expected', () => {
     });
 
     it('Should return an object invalid owner, repo, type, and number when given a valid hostname and invalid href', () => {
-        const href = 'https://gitlab.com/mattermost/test/-/merge_requests/123Yes';
+        const href = 'https://gitlab.com/mattermost/test/123Yes I think this is the right MR';
         const hostname = 'gitlab.com';
         const expected = {
             owner: 'mattermost',
             repo: 'test',
-            type: 'merge_requests',
-            number: '123Yes',
+        };
+
+        const result = getInfoAboutLink(href, hostname);
+        expect(result).toEqual(expected);
+    });
+
+    it('Should return an object valid owner, repo, type, and number with comment id when given a valid hostname and issue comment as href', () => {
+        const href = 'https://gitlab.com/mattermost/test/-/issues/3#note_1340573704';
+        const hostname = 'gitlab.com';
+        const expected = {
+            owner: 'mattermost',
+            repo: 'test',
+            type: 'issues',
+            number: '3#note_1340573704',
         };
 
         const result = getInfoAboutLink(href, hostname);
