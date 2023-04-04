@@ -27,11 +27,11 @@ const LINK_TYPES = {
 export const getInfoAboutLink = (href, hostname) => {
     const linkInfo = href.split(`${hostname}/`)[1].split('/');
     return {
-        owner:linkInfo[0],
+        owner: linkInfo[0],
         repo: linkInfo[1],
         type: linkInfo[3],
-        number: linkInfo[4]
-    }
+        number: linkInfo[4],
+    };
 };
 
 export const LinkTooltip = ({href, connected, gitlabURL}) => {
@@ -45,7 +45,6 @@ export const LinkTooltip = ({href, connected, gitlabURL}) => {
         const init = async () => {
             if (url.origin === gitlabURL && validateGitlabURL(href)) {
                 const linkInfo = getInfoAboutLink(href, url.hostname);
-                console.log("11111111 ",linkInfo," 11111111");
                 let res;
                 switch (linkInfo.type) {
                 case LINK_TYPES.ISSUES:

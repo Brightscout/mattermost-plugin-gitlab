@@ -5,11 +5,11 @@ describe('getInfoAboutLink should work as expected', () => {
         const href = 'https://gitlab.com/mattermost/test/-/merge_requests/123';
         const hostname = 'gitlab.com';
         const expected = {
-            owner:'mattermost',
+            owner: 'mattermost',
             repo: 'test',
             type: 'merge_requests',
-            number: '123'
-        }
+            number: '123',
+        };
 
         const result = getInfoAboutLink(href, hostname);
         expect(result).toEqual(expected);
@@ -19,10 +19,10 @@ describe('getInfoAboutLink should work as expected', () => {
         const href = 'https://gitlab.com/mattermost/test/-/merge_requests';
         const hostname = 'gitlab.com';
         const expected = {
-            owner:'mattermost',
+            owner: 'mattermost',
             repo: 'test',
-            type: 'merge_requests'
-        }
+            type: 'merge_requests',
+        };
 
         const result = getInfoAboutLink(href, hostname);
         expect(result).toEqual(expected);
@@ -32,9 +32,9 @@ describe('getInfoAboutLink should work as expected', () => {
         const href = 'https://gitlab.com/mattermost/test/123';
         const hostname = 'gitlab.com';
         const expected = {
-            owner:'mattermost',
-            repo: 'test'
-        }
+            owner: 'mattermost',
+            repo: 'test',
+        };
 
         const result = getInfoAboutLink(href, hostname);
         expect(result).toEqual(expected);
@@ -44,7 +44,7 @@ describe('getInfoAboutLink should work as expected', () => {
         const href = 'https://gitlab.com/mattermost/test/-/merge_requests/123';
         const hostname = '';
         const expected = {
-            owner:''
+            owner: '',
         };
 
         const result = getInfoAboutLink(href, hostname);
@@ -55,11 +55,11 @@ describe('getInfoAboutLink should work as expected', () => {
         const href = 'https://gitlab.com/mattermost/test/-/merge_requests/123Yes';
         const hostname = 'gitlab.com';
         const expected = {
-            owner:'mattermost',
+            owner: 'mattermost',
             repo: 'test',
             type: 'merge_requests',
-            number: '123Yes'
-        }
+            number: '123Yes',
+        };
 
         const result = getInfoAboutLink(href, hostname);
         expect(result).toEqual(expected);
