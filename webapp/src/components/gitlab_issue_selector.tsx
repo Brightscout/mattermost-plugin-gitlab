@@ -8,8 +8,8 @@ import debounce from 'debounce-promise';
 import AsyncSelect from 'react-select/async';
 import {SingleValue} from 'react-select';
 
-import {getStyleForReactSelect} from 'src/utils/styles';
-import Client from 'src/client';
+import {getStyleForReactSelect} from '../utils/styles';
+import Client from '../client';
 import Setting from './setting';
 
 const searchDebounceDelay = 400;
@@ -24,6 +24,17 @@ interface PropTypes {
     addValidate: (key: string, validateField: () => boolean) => void;
     removeValidate: (key: string) => void;
 };
+
+export const getUsernameAndProjectName=(web_url: string) => {
+    const projectParts = web_url.split('/');
+    let prefix = '';
+
+    // Extract "username/projectName" from the issueURL parts
+    if (projectParts.length >= 5) {
+        prefix = `${projectParts[3]}/${projectParts[4]}`;
+    }    
+    return prefix
+}
 
 const GitlabIssueSelector = ({name, required, theme, onChange, error, value, addValidate, removeValidate
 }: PropTypes) => {
@@ -71,12 +82,7 @@ const GitlabIssueSelector = ({name, required, theme, onChange, error, value, add
             }
 
             return issues.map((issue) => {
-                const projectParts = issue.web_url.split('/');
-                let prefix = '';
-                // Extract "username/projectName" from the issueURL parts
-                if (projectParts.length >= 5) {
-                    prefix = `${projectParts[3]}/${projectParts[4]}`;
-                }
+                let prefix = getUsernameAndProjectName(issue.web_url)
                 return ({value: issue, label: `${prefix}, #${issue.iid}: ${issue.title}`});
             });
         } catch (e) {
