@@ -24,7 +24,15 @@ const LINK_TYPES = {
     ISSUES: 'issues',
 };
 
-export const getInfoAboutLink = (href, hostname) => href.split(`${hostname}/`)[1].split('/');
+export const getInfoAboutLink = (href, hostname) => {
+    const linkInfo = href.split(`${hostname}/`)[1].split('/');
+    return {
+        owner:linkInfo[0],
+        repo: linkInfo[1],
+        type: linkInfo[3],
+        number: linkInfo[4]
+    }
+};
 
 export const LinkTooltip = ({href, connected, gitlabURL}) => {
     const [data, setData] = useState(null);
@@ -36,19 +44,20 @@ export const LinkTooltip = ({href, connected, gitlabURL}) => {
         const url = new URL(href);
         const init = async () => {
             if (url.origin === gitlabURL && validateGitlabURL(href)) {
-                const [owner, repo, , type, number] = getInfoAboutLink(href, url.hostname);
+                const linkInfo = getInfoAboutLink(href, url.hostname);
+                console.log("11111111 ",linkInfo," 11111111");
                 let res;
-                switch (type) {
+                switch (linkInfo.type) {
                 case LINK_TYPES.ISSUES:
-                    res = await Client.getIssue(owner, repo, number);
+                    res = await Client.getIssue(linkInfo.owner, linkInfo.repo, linkInfo.number);
                     break;
                 case LINK_TYPES.MERGE_REQUESTS:
-                    res = await Client.getPullRequest(owner, repo, number);
+                    res = await Client.getPullRequest(linkInfo.owner, linkInfo.repo, linkInfo.number);
                     break;
                 }
 
                 if (res) {
-                    res = {...res, owner, repo, type};
+                    res = {...res, owner: linkInfo.owner, repo: linkInfo.repo, type: linkInfo.type};
                     setData(res);
                 }
             }
