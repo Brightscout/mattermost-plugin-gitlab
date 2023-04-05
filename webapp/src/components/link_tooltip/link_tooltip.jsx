@@ -3,9 +3,14 @@ import PropTypes from 'prop-types';
 import ReactMarkdown from 'react-markdown';
 import Octicon, {GitMergeIcon, GitPullRequestIcon, IssueClosedIcon, IssueOpenedIcon} from '@primer/octicons-react';
 
+import {useDispatch} from 'react-redux';
+
+import {logError} from 'mattermost-redux/actions/errors';
+
 import Client from '../../client';
 import {validateGitlabURL} from '../../utils/regex_utils';
 import {isValidUrl} from '../../utils/url_utils';
+
 import './tooltip.css';
 
 const STATE_COLOR_MAP = {
@@ -36,6 +41,7 @@ export const getInfoAboutLink = (href, hostname) => {
 
 export const LinkTooltip = ({href, connected, gitlabURL}) => {
     const [data, setData] = useState(null);
+    const dispatch = useDispatch();
     useEffect(() => {
         if (!isValidUrl(href)) {
             return;
@@ -91,7 +97,7 @@ export const LinkTooltip = ({href, connected, gitlabURL}) => {
             iconType = data.state === STATE_TYPES.OPENED ? IssueOpenedIcon : IssueClosedIcon;
             break;
         default:
-            console.log("this link type is not supported");
+            dispatch(logError('this link type is not supported'));
         }
         const icon = (
             <span style={{color}}>
