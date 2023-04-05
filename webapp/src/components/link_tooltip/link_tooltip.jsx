@@ -31,12 +31,15 @@ const LINK_TYPES = {
 
 export const getInfoAboutLink = (href, hostname) => {
     const linkInfo = href.split(`${hostname}/`)[1].split('/');
-    return {
-        owner: linkInfo[0],
-        repo: linkInfo[1],
-        type: linkInfo[3],
-        number: linkInfo[4],
-    };
+    if (linkInfo.length >= 5) {
+        return {
+            owner: linkInfo[0],
+            repo: linkInfo[1],
+            type: linkInfo[3],
+            number: linkInfo[4],
+        };
+    }
+    return {};
 };
 
 export const LinkTooltip = ({href, connected, gitlabURL}) => {
@@ -52,13 +55,15 @@ export const LinkTooltip = ({href, connected, gitlabURL}) => {
             if (url.origin === gitlabURL && validateGitlabURL(href)) {
                 const linkInfo = getInfoAboutLink(href, url.hostname);
                 let res;
-                switch (linkInfo.type) {
+                switch (linkInfo?.type) {
                 case LINK_TYPES.ISSUES:
                     res = await Client.getIssue(linkInfo.owner, linkInfo.repo, linkInfo.number);
                     break;
                 case LINK_TYPES.MERGE_REQUESTS:
                     res = await Client.getPullRequest(linkInfo.owner, linkInfo.repo, linkInfo.number);
                     break;
+                default:
+                    dispatch(logError('this link type is not supported to display a tooltip'));
                 }
 
                 if (res) {
@@ -97,7 +102,7 @@ export const LinkTooltip = ({href, connected, gitlabURL}) => {
             iconType = data.state === STATE_TYPES.OPENED ? IssueOpenedIcon : IssueClosedIcon;
             break;
         default:
-            dispatch(logError('this link type is not supported'));
+            dispatch(logError('this link type is not supported to display a tooltip'));
         }
         const icon = (
             <span style={{color}}>
