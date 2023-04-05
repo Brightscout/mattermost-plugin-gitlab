@@ -63,7 +63,7 @@ export const LinkTooltip = ({href, connected, gitlabURL}) => {
                     res = await Client.getPullRequest(linkInfo.owner, linkInfo.repo, linkInfo.number);
                     break;
                 default:
-                    dispatch(logError('this link type is not supported to display a tooltip'));
+                    dispatch(logError(`link type ${data.type} is not supported to display a tooltip`));
                 }
 
                 if (res) {
@@ -102,7 +102,7 @@ export const LinkTooltip = ({href, connected, gitlabURL}) => {
             iconType = data.state === STATE_TYPES.OPENED ? IssueOpenedIcon : IssueClosedIcon;
             break;
         default:
-            dispatch(logError('this link type is not supported to display a tooltip'));
+            dispatch(logError(`link type ${data.type} is not supported to display a tooltip`));
         }
         const icon = (
             <span style={{color}}>

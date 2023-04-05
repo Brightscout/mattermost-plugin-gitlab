@@ -23,7 +23,7 @@ describe('getInfoAboutLink should work as expected', () => {
         expect(result).toEqual({});
     });
 
-    it('Should return an empty object when given a valid GitLab hostname and href missing the type', () => {
+    it('Should return an empty object when given a valid GitLab hostname and href with missing the type parameter', () => {
         const href = 'https://gitlab.com/mattermost/test/123';
         const hostname = 'gitlab.com';
 
