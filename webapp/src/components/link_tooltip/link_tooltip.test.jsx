@@ -39,7 +39,7 @@ describe('getInfoAboutLink should work as expected', () => {
         expect(result).toEqual({});
     });
 
-    it('Should return an empty object when given a valid hostname and invalid href', () => {
+    it('Should return an empty object when given a valid hostname and a invalid href', () => {
         const href = 'https://gitlab.com/mattermost/test/123Yes I think this is the right MR';
         const hostname = 'gitlab.com';
 
