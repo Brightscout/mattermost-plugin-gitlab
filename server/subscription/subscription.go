@@ -16,6 +16,7 @@ var allFeatures = map[string]bool{
 	"pipeline":               true,
 	"tag":                    true,
 	"pull_reviews":           true,
+	"confidential_issues":    true,
 	// "label:":                 true,//particular case for label:XXX
 }
 
@@ -60,6 +61,10 @@ func (s *Subscription) Jobs() bool {
 }
 
 func (s *Subscription) Issues() bool {
+	return strings.Contains(s.Features, "issues")
+}
+
+func (s *Subscription) ConfidentialIssues() bool {
 	return strings.Contains(s.Features, "issues")
 }
 
