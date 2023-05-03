@@ -12,7 +12,7 @@ import (
 	"github.com/mattermost/mattermost-server/v6/plugin/plugintest"
 	"golang.org/x/oauth2"
 
-	//"github.com/pkg/errors"
+	"github.com/pkg/errors"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
@@ -42,7 +42,7 @@ var subscribeCommandTests = []subscribeCommandTest{
 		parameters: []string{"list"},
 		want:       "Currently there are no subscriptions in this channel",
 	},
-	/*{
+	{
 		testName:      "No Repository permissions",
 		parameters:    []string{"add", "group/project"},
 		mockGitlab:    true,
@@ -93,7 +93,7 @@ var subscribeCommandTests = []subscribeCommandTest{
 		webhookInfo:    []*gitlab.WebhookInfo{{}},
 		want:           "Unable to determine status of Webhook. See [setup instructions](https://github.com/mattermost/mattermost-plugin-gitlab#step-3-create-a-gitlab-webhook) to validate.",
 		projectHookErr: errors.New("unable to get project hooks"),
-	},*/
+	},
 }
 
 func TestSubscribeCommand(t *testing.T) {
