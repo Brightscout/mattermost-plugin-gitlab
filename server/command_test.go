@@ -321,7 +321,7 @@ func getTestPlugin(t *testing.T, mockCtrl *gomock.Controller, hooks []*gitlab.We
 		mock.AnythingOfTypeArgument("string")).Return(nil)
 
 	p.client = pluginapi.NewClient(api, p.Driver)
-	
+
 	return p
 }
 
