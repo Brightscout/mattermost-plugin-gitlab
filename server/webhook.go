@@ -208,21 +208,6 @@ func (p *Plugin) permissionToProject(ctx context.Context, userID, namespace, pro
 		return false
 	}
 
-	if result, err := p.GitlabClient.GetProject(ctx, info, namespace, project); result == nil || err != nil {
-		if err != nil {
-			p.client.Log.Warn("can't get project in webhook", "err", err.Error(), "project", namespace+"/"+project)
-		}
-		return false
-	}
-	return true
-}
-
-func (p *Plugin) checkForGuestUser(ctx context.Context, userID, namespace, project string) bool {
-	info, apiErr := p.getGitlabUserInfoByMattermostID(userID)
-	if apiErr != nil {
-		return false
-	}
-
 	result, err := p.GitlabClient.GetProject(ctx, info, namespace, project)
 	if result == nil || err != nil {
 		if err != nil {
@@ -233,10 +218,10 @@ func (p *Plugin) checkForGuestUser(ctx context.Context, userID, namespace, proje
 
 	// Check for guest level permissions
 	if result.Permissions.ProjectAccess != nil && result.Permissions.ProjectAccess.AccessLevel == gitlabLib.GuestPermissions {
-		return true
+		return false
 	}
 
-	return false
+	return true
 }
 
 func CreateHook(ctx context.Context, gitlabClient gitlab.Gitlab, info *gitlab.UserInfo, group, project string, hookOptions *gitlab.AddWebhookOptions) (*gitlab.WebhookInfo, error) {

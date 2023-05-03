@@ -46,7 +46,7 @@ var subscribeCommandTests = []subscribeCommandTest{
 		testName:      "No Repository permissions",
 		parameters:    []string{"add", "group/project"},
 		mockGitlab:    true,
-		want:          "You don't have the permission to access the project",
+		want:          "You don't have the permission to create subscription for this project.",
 		webhookInfo:   []*gitlab.WebhookInfo{{URL: "example.com/somewebhookURL"}},
 		noAccess:      true,
 		mattermostURL: "example.com",
@@ -56,7 +56,7 @@ var subscribeCommandTests = []subscribeCommandTest{
 		testName:      "Guest permissions only",
 		parameters:    []string{"add", "group/project"},
 		mockGitlab:    true,
-		want:          "Guest users cannot create a subscription",
+		want:          "You don't have the permission to create subscription for this project.",
 		webhookInfo:   []*gitlab.WebhookInfo{{URL: "example.com/somewebhookURL"}},
 		noAccess:      true,
 		mattermostURL: "example.com",
@@ -259,7 +259,7 @@ func getTestPlugin(t *testing.T, mockCtrl *gomock.Controller, hooks []*gitlab.We
 						AccessLevel: accessLevel,
 					},
 				},
-			}, nil).Times(2)
+			}, nil)
 		}
 
 		if !noAccess {
