@@ -65,7 +65,7 @@ func (s *Subscription) Issues() bool {
 }
 
 func (s *Subscription) ConfidentialIssues() bool {
-	return strings.Contains(s.Features, "issues")
+	return strings.Contains(s.Features, "confidential_issues")
 }
 
 func (s *Subscription) Pushes() bool {
