@@ -231,7 +231,8 @@ func (p *Plugin) checkForGuestUser(ctx context.Context, userID, namespace, proje
 		return false
 	}
 
-	if result.Permissions.ProjectAccess != nil && result.Permissions.GroupAccess.AccessLevel == gitlabLib.GuestPermissions {
+	// Check for guest level permissions
+	if result.Permissions.ProjectAccess != nil && result.Permissions.ProjectAccess.AccessLevel == gitlabLib.GuestPermissions {
 		return true
 	}
 
