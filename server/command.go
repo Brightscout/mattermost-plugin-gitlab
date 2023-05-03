@@ -547,13 +547,13 @@ func (p *Plugin) subscriptionsAddCommand(ctx context.Context, info *gitlab.UserI
 	}
 
 	if hasPermission := p.permissionToProject(ctx, info.UserID, namespace, project); !hasPermission {
-		p.API.LogWarn("don't have the permission to access the project")
-		return "Don't have the permission to access the project"
+		p.API.LogWarn("You don't have the permission to access the project")
+		return "You don't have the permission to access the project"
 	}
 
 	if guestUser := p.checkForGuestUser(ctx, info.UserID, namespace, project); guestUser {
-		p.API.LogWarn("guest user cannot create a subscription")
-		return "Guest user cannot create a subscription"
+		p.API.LogWarn("Guest users cannot create a subscription")
+		return "Guest users cannot create a subscription"
 	}
 
 	updatedSubscriptions, subscribeErr := p.Subscribe(info, namespace, project, channelID, features)

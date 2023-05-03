@@ -46,7 +46,7 @@ var subscribeCommandTests = []subscribeCommandTest{
 		testName:      "No Repository permissions",
 		parameters:    []string{"add", "group/project"},
 		mockGitlab:    true,
-		want:          "Don't have the permission to access the project",
+		want:          "You don't have the permission to access the project",
 		webhookInfo:   []*gitlab.WebhookInfo{{URL: "example.com/somewebhookURL"}},
 		noAccess:      true,
 		mattermostURL: "example.com",
@@ -56,7 +56,7 @@ var subscribeCommandTests = []subscribeCommandTest{
 		testName:      "Guest permissions only",
 		parameters:    []string{"add", "group/project"},
 		mockGitlab:    true,
-		want:          "Guest user cannot create a subscription",
+		want:          "Guest users cannot create a subscription",
 		webhookInfo:   []*gitlab.WebhookInfo{{URL: "example.com/somewebhookURL"}},
 		noAccess:      true,
 		mattermostURL: "example.com",
@@ -286,7 +286,7 @@ func getTestPlugin(t *testing.T, mockCtrl *gomock.Controller, hooks []*gitlab.We
 		GitlabURL:               "https://example.com",
 		GitlabOAuthClientID:     "client_id",
 		GitlabOAuthClientSecret: "secret",
-		EncryptionKey:           "aaaaaaaaaaaaaaaa",
+		EncryptionKey:           "encryption___key",
 	}
 
 	p.configuration = &config
@@ -296,12 +296,13 @@ func getTestPlugin(t *testing.T, mockCtrl *gomock.Controller, hooks []*gitlab.We
 		AccessToken: "access_token",
 		Expiry:      time.Now().Add(1 * time.Hour),
 	}
+
 	info := gitlab.UserInfo{
 		UserID:         "user_id",
 		Token:          &token,
 		GitlabUsername: "gitlab_username",
-		GitlabUserID:   0,
 	}
+
 	encryptedToken, err := encrypt([]byte(config.EncryptionKey), info.Token.AccessToken)
 	require.NoError(t, err)
 
@@ -318,7 +319,7 @@ func getTestPlugin(t *testing.T, mockCtrl *gomock.Controller, hooks []*gitlab.We
 		mock.AnythingOfTypeArgument("string"),
 		mock.AnythingOfTypeArgument("string"),
 		mock.AnythingOfTypeArgument("string"),
-		mock.AnythingOfTypeArgument("string")).Return(nil)
+		mock.AnythingOfTypeArgument("string"))
 
 	p.client = pluginapi.NewClient(api, p.Driver)
 

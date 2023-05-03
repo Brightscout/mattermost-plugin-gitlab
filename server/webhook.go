@@ -226,7 +226,7 @@ func (p *Plugin) checkForGuestUser(ctx context.Context, userID, namespace, proje
 	result, err := p.GitlabClient.GetProject(ctx, info, namespace, project)
 	if result == nil || err != nil {
 		if err != nil {
-			p.API.LogWarn("can't get project in webhook", "err", err.Error(), "project", namespace+"/"+project)
+			p.API.LogWarn("Can't get project in webhook", "err", err.Error(), "project", namespace+"/"+project)
 		}
 		return false
 	}
