@@ -34,6 +34,15 @@ type subscribeCommandTest struct {
 	mockGitlab     bool
 }
 
+func getTestConfig() *configuration {
+	return &configuration{
+		GitlabURL:               "https://example.com",
+		GitlabOAuthClientID:     "client_id",
+		GitlabOAuthClientSecret: "secret",
+		EncryptionKey:           "encryption___key",
+	}
+}
+
 const subscribeSuccessMessage = "Successfully subscribed to group/project.\nA Webhook is needed, run ```/gitlab webhook add group/project``` to create one now."
 
 var subscribeCommandTests = []subscribeCommandTest{
@@ -282,14 +291,8 @@ func getTestPlugin(t *testing.T, mockCtrl *gomock.Controller, hooks []*gitlab.We
 	api.On("KVSetWithOptions", mock.AnythingOfType("string"), mock.Anything, mock.AnythingOfType("model.PluginKVSetOptions")).Return(true, nil)
 	api.On("PublishWebSocketEvent", mock.Anything, mock.Anything, mock.Anything).Return(nil)
 
-	config := configuration{
-		GitlabURL:               "https://example.com",
-		GitlabOAuthClientID:     "client_id",
-		GitlabOAuthClientSecret: "secret",
-		EncryptionKey:           "encryption___key",
-	}
-
-	p.configuration = &config
+	config := getTestConfig()
+	p.configuration = config
 	p.initializeAPI()
 
 	token := oauth2.Token{
