@@ -283,6 +283,7 @@ func getTestPlugin(t *testing.T, mockCtrl *gomock.Controller, hooks []*gitlab.We
 
 	api := &plugintest.API{}
 	p.SetAPI(api)
+	p.client = pluginapi.NewClient(api, p.Driver)
 
 	conf := &model.Config{}
 	conf.ServiceSettings.SiteURL = &mattermostURL
@@ -323,8 +324,6 @@ func getTestPlugin(t *testing.T, mockCtrl *gomock.Controller, hooks []*gitlab.We
 		mock.AnythingOfTypeArgument("string"),
 		mock.AnythingOfTypeArgument("string"),
 		mock.AnythingOfTypeArgument("string"))
-
-	p.client = pluginapi.NewClient(api, p.Driver)
 
 	return p
 }
