@@ -3,7 +3,7 @@ import {bindActionCreators} from 'redux';
 
 import {
     getReviews,
-    getUnreads,
+    getTodos,
     getYourPrs,
     getYourAssignments,
     updateRHSState,
@@ -23,7 +23,7 @@ function mapStateToProps(state) {
         reviews: state[`plugins-${id}`].reviews,
         yourPrs: state[`plugins-${id}`].yourPrs,
         yourAssignments: state[`plugins-${id}`].yourAssignments,
-        unreads: state[`plugins-${id}`].unreads,
+        todos: state[`plugins-${id}`].todos,
         gitlabURL: state[`plugins-${id}`].gitlabURL,
         org: state[`plugins-${id}`].organization,
         pluginServerRoute: getPluginServerRoute(state),
@@ -36,7 +36,7 @@ function mapDispatchToProps(dispatch) {
         actions: bindActionCreators(
             {
                 getReviews,
-                getUnreads,
+                getTodos,
                 getYourPrs,
                 getYourAssignments,
                 updateRHSState,

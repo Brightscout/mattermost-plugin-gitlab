@@ -14,7 +14,7 @@ export default class SidebarButtons extends React.PureComponent {
         clientId: PropTypes.string,
         gitlabURL: PropTypes.string,
         reviews: PropTypes.arrayOf(PropTypes.object),
-        unreads: PropTypes.arrayOf(PropTypes.object),
+        todos: PropTypes.arrayOf(PropTypes.object),
         yourPrs: PropTypes.arrayOf(PropTypes.object),
         yourAssignments: PropTypes.arrayOf(PropTypes.object),
         isTeamSidebar: PropTypes.bool,
@@ -22,7 +22,7 @@ export default class SidebarButtons extends React.PureComponent {
         showRHSPlugin: PropTypes.func.isRequired,
         actions: PropTypes.shape({
             getReviews: PropTypes.func.isRequired,
-            getUnreads: PropTypes.func.isRequired,
+            getTodos: PropTypes.func.isRequired,
             getYourPrs: PropTypes.func.isRequired,
             getYourAssignments: PropTypes.func.isRequired,
             updateRHSState: PropTypes.func.isRequired,
@@ -61,7 +61,7 @@ export default class SidebarButtons extends React.PureComponent {
         this.setState({refreshing: true});
         await Promise.all([
             this.props.actions.getReviews(),
-            this.props.actions.getUnreads(),
+            this.props.actions.getTodos(),
             this.props.actions.getYourPrs(),
             this.props.actions.getYourAssignments(),
         ]);
@@ -115,7 +115,7 @@ export default class SidebarButtons extends React.PureComponent {
         const baseURL = this.props.gitlabURL || 'https://gitlab.com';
         const reviews = this.props.reviews || [];
         const yourPrs = this.props.yourPrs || [];
-        const unreads = this.props.unreads || [];
+        const todos = this.props.todos || [];
         const yourAssignments = this.props.yourAssignments || [];
         const refreshClass = this.state.refreshing ? ' fa-spin' : '';
 
@@ -133,7 +133,7 @@ export default class SidebarButtons extends React.PureComponent {
                 <OverlayTrigger
                     key='gitlabYourPrsLink'
                     placement={placement}
-                    overlay={<Tooltip id='yourPrsTooltip'>{'Your open merge requests'}</Tooltip>}
+                    overlay={<Tooltip id='yourPrsTooltip'>{'Merge requests assigned'}</Tooltip>}
                 >
                     <a
                         onClick={() => this.openRHS(RHSStates.PRS)}
@@ -146,7 +146,7 @@ export default class SidebarButtons extends React.PureComponent {
                 <OverlayTrigger
                     key='gitlabReviewsLink'
                     placement={placement}
-                    overlay={<Tooltip id='reviewTooltip'>{'Merge requests that need review'}</Tooltip>}
+                    overlay={<Tooltip id='reviewTooltip'>{'Merge requests needing review'}</Tooltip>}
                 >
                     <a
                         onClick={() => this.openRHS(RHSStates.REVIEWS)}
@@ -159,7 +159,7 @@ export default class SidebarButtons extends React.PureComponent {
                 <OverlayTrigger
                     key='gitlabAssignmentsLink'
                     placement={placement}
-                    overlay={<Tooltip id='reviewTooltip'>{'Your assignments'}</Tooltip>}
+                    overlay={<Tooltip id='reviewTooltip'>{'Issues'}</Tooltip>}
                 >
                     <a
                         onClick={() => this.openRHS(RHSStates.ASSIGNMENTS)}
@@ -170,16 +170,16 @@ export default class SidebarButtons extends React.PureComponent {
                     </a>
                 </OverlayTrigger>
                 <OverlayTrigger
-                    key='gitlabUnreadsLink'
+                    key='gitlabTodosLink'
                     placement={placement}
-                    overlay={<Tooltip id='unreadsTooltip'>{'Unread messages'}</Tooltip>}
+                    overlay={<Tooltip id='todosTooltip'>{'To-Do list'}</Tooltip>}
                 >
                     <a
-                        onClick={() => this.openRHS(RHSStates.UNREADS)}
+                        onClick={() => this.openRHS(RHSStates.TODOS)}
                         style={button}
                     >
                         <i className='fa fa-envelope'/>
-                        {' ' + unreads.length}
+                        {' ' + todos.length}
                     </a>
                 </OverlayTrigger>
                 <OverlayTrigger

@@ -24,7 +24,7 @@ interface Props {
     org: string;
     gitlabURL: string;
     reviews: Item[];
-    unreads: Item[],
+    todos: Item[],
     yourPrs: Item[],
     yourAssignments: Item[],
     rhsState: string,
@@ -72,7 +72,7 @@ function shouldUpdateDetails(prs: Item[], prevPrs: Item[], targetState: string, 
 
 function SidebarRight({theme}: {theme: Theme}) {
     const sidebarData = useSelector(getSidebarData);
-    const {username, yourAssignments, org, unreads, gitlabURL, rhsState, reviews, yourPrs} = sidebarData;
+    const {username, yourAssignments, org, todos, gitlabURL, rhsState, reviews, yourPrs} = sidebarData;
 
     const dispatch = useDispatch();
 
@@ -105,22 +105,22 @@ function SidebarRight({theme}: {theme: Theme}) {
     switch (rhsState) {
     case RHSStates.PRS:
         gitlabItems = yourPrs;
-        title = 'Your Open Merge Requests';
-        listUrl = `${baseURL}${orgQuery}/merge_requests?state=opened&author_username=${username}`;
+        title = 'Merge Requests Assigned';
+        listUrl = `${baseURL}${orgQuery}/merge_requests?state=opened&assignee_username=${username}`;
         break;
     case RHSStates.REVIEWS:
         gitlabItems = reviews;
         listUrl = `${baseURL}${orgQuery}/merge_requests?reviewer_username=${username}`;
         title = 'Merge Requests Needing Review';
         break;
-    case RHSStates.UNREADS:
-        gitlabItems = unreads;
-        title = 'Unread Messages';
+    case RHSStates.TODOS:
+        gitlabItems = todos;
+        title = 'To-Do List';
         listUrl = `${baseURL}/dashboard/todos`;
         break;
     case RHSStates.ASSIGNMENTS:
         gitlabItems = yourAssignments;
-        title = 'Your Assignments';
+        title = 'Issues';
         listUrl = `${baseURL}${orgQuery}/issues?assignee_username=${username}`;
         break;
     default:

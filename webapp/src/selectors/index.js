@@ -51,7 +51,7 @@ export const getSidebarData = createSelector(
             yourPrs: mapPrsToDetails(pluginState.yourPrs, pluginState.yourPrDetails),
             yourPrDetails: pluginState.yourPrDetails,
             yourAssignments: pluginState.yourAssignments,
-            unreads: pluginState.unreads,
+            todos: pluginState.todos,
             org: pluginState.organization,
             gitlabURL: pluginState.gitlabURL,
             rhsState: pluginState.rhsState,

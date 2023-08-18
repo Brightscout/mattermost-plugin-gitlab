@@ -3,7 +3,7 @@ import Constants from '../constants';
 import {
     getConnected,
     getReviews,
-    getUnreads,
+    getTodos,
     getYourPrs,
     getYourAssignments,
 } from '../actions';
@@ -50,7 +50,7 @@ export function handleReconnect(store, reminder = false) {
         );
         if (data && data.connected) {
             getReviews()(store.dispatch, store.getState);
-            getUnreads()(store.dispatch, store.getState);
+            getTodos()(store.dispatch, store.getState);
             getYourPrs()(store.dispatch, store.getState);
             getYourAssignments()(store.dispatch, store.getState);
         }
@@ -61,7 +61,7 @@ export function handleRefresh(store) {
     return () => {
         if (store.getState()[`plugins-${id}`].connected) {
             getReviews()(store.dispatch, store.getState);
-            getUnreads()(store.dispatch, store.getState);
+            getTodos()(store.dispatch, store.getState);
             getYourPrs()(store.dispatch, store.getState);
             getYourAssignments()(store.dispatch, store.getState);
         }

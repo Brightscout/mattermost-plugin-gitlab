@@ -188,11 +188,11 @@ export function getMentions() {
     };
 }
 
-export function getUnreads() {
+export function getTodos() {
     return async (dispatch, getState) => {
         let data;
         try {
-            data = await Client.getUnreads();
+            data = await Client.getTodos();
         } catch (error) {
             return {error};
         }
@@ -206,7 +206,7 @@ export function getUnreads() {
         }
 
         dispatch({
-            type: ActionTypes.RECEIVED_UNREADS,
+            type: ActionTypes.RECEIVED_TODOS,
             data,
         });
 

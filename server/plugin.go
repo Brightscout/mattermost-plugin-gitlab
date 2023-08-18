@@ -575,13 +575,13 @@ func (p *Plugin) GetToDo(ctx context.Context, user *gitlab.UserInfo) (bool, stri
 
 	notificationText := ""
 	g.Go(func() error {
-		var unreads []*gitlabLib.Todo
+		var todos []*gitlabLib.Todo
 		err := p.useGitlabClient(user, func(info *gitlab.UserInfo, token *oauth2.Token) error {
-			resp, err := p.GitlabClient.GetUnreads(ctx, info, token)
+			resp, err := p.GitlabClient.GetToDoList(ctx, info, token)
 			if err != nil {
 				return err
 			}
-			unreads = resp
+			todos = resp
 			return nil
 		})
 		if err != nil {
@@ -591,7 +591,7 @@ func (p *Plugin) GetToDo(ctx context.Context, user *gitlab.UserInfo) (bool, stri
 		notificationCount := 0
 		notificationContent := ""
 
-		for _, n := range unreads {
+		for _, n := range todos {
 			if n == nil {
 				continue
 			}
@@ -649,7 +649,7 @@ func (p *Plugin) GetToDo(ctx context.Context, user *gitlab.UserInfo) (bool, stri
 	g.Go(func() error {
 		var yourAssignments []*gitlab.Issue
 		err := p.useGitlabClient(user, func(info *gitlab.UserInfo, token *oauth2.Token) error {
-			resp, err := p.GitlabClient.GetYourAssignments(ctx, info, token)
+			resp, err := p.GitlabClient.GetYourAssignedIssues(ctx, info, token)
 			if err != nil {
 				return err
 			}
@@ -679,7 +679,7 @@ func (p *Plugin) GetToDo(ctx context.Context, user *gitlab.UserInfo) (bool, stri
 	g.Go(func() error {
 		var mergeRequests []*gitlab.MergeRequest
 		err := p.useGitlabClient(user, func(info *gitlab.UserInfo, token *oauth2.Token) error {
-			resp, err := p.GitlabClient.GetYourPrs(ctx, info, token)
+			resp, err := p.GitlabClient.GetYourAssignedPrs(ctx, info, token)
 			if err != nil {
 				return err
 			}
@@ -709,16 +709,16 @@ func (p *Plugin) GetToDo(ctx context.Context, user *gitlab.UserInfo) (bool, stri
 		return false, "", err
 	}
 
-	text := "##### Unread Messages\n"
+	text := "##### To-Do list\n"
 	text += notificationText
 
 	text += "##### Review Requests\n"
 	text += reviewText
 
-	text += "##### Assignments\n"
+	text += "##### Issues\n"
 	text += assignmentText
 
-	text += "##### Your Open Merge Requests\n"
+	text += "##### Merge Requests Assigned\n"
 	text += mergeRequestText
 
 	return hasTodo, text, nil

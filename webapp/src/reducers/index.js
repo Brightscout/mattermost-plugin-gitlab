@@ -124,9 +124,9 @@ function mentions(state = [], action) {
     }
 }
 
-function unreads(state = [], action) {
+function todos(state = [], action) {
     switch (action.type) {
-    case ActionTypes.RECEIVED_UNREADS:
+    case ActionTypes.RECEIVED_TODOS:
         return action.data;
     default:
         return state;
@@ -187,7 +187,7 @@ export default combineReducers({
     yourPrs,
     yourAssignments,
     mentions,
-    unreads,
+    todos,
     gitlabUsers,
     rhsPluginAction,
     rhsState,
