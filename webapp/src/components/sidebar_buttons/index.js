@@ -4,8 +4,8 @@ import {bindActionCreators} from 'redux';
 import {
     getReviews,
     getTodos,
-    getYourPrs,
-    getYourAssignments,
+    getYourAssignedPrs,
+    getYourAssignedIssues,
     updateRHSState,
 } from '../../actions';
 
@@ -21,8 +21,8 @@ function mapStateToProps(state) {
         username: state[`plugins-${id}`].username,
         clientId: state[`plugins-${id}`].clientId,
         reviews: state[`plugins-${id}`].reviews,
-        yourPrs: state[`plugins-${id}`].yourPrs,
-        yourAssignments: state[`plugins-${id}`].yourAssignments,
+        yourAssignedPrs: state[`plugins-${id}`].yourAssignedPrs,
+        yourAssignedIssues: state[`plugins-${id}`].yourAssignedIssues,
         todos: state[`plugins-${id}`].todos,
         gitlabURL: state[`plugins-${id}`].gitlabURL,
         org: state[`plugins-${id}`].organization,
@@ -37,8 +37,8 @@ function mapDispatchToProps(dispatch) {
             {
                 getReviews,
                 getTodos,
-                getYourPrs,
-                getYourAssignments,
+                getYourAssignedPrs,
+                getYourAssignedIssues,
                 updateRHSState,
             },
             dispatch,

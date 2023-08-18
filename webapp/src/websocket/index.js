@@ -4,8 +4,8 @@ import {
     getConnected,
     getReviews,
     getTodos,
-    getYourPrs,
-    getYourAssignments,
+    getYourAssignedPrs,
+    getYourAssignedIssues,
 } from '../actions';
 import {id} from '../manifest';
 
@@ -51,8 +51,8 @@ export function handleReconnect(store, reminder = false) {
         if (data && data.connected) {
             getReviews()(store.dispatch, store.getState);
             getTodos()(store.dispatch, store.getState);
-            getYourPrs()(store.dispatch, store.getState);
-            getYourAssignments()(store.dispatch, store.getState);
+            getYourAssignedPrs()(store.dispatch, store.getState);
+            getYourAssignedIssues()(store.dispatch, store.getState);
         }
     };
 }
@@ -62,8 +62,8 @@ export function handleRefresh(store) {
         if (store.getState()[`plugins-${id}`].connected) {
             getReviews()(store.dispatch, store.getState);
             getTodos()(store.dispatch, store.getState);
-            getYourPrs()(store.dispatch, store.getState);
-            getYourAssignments()(store.dispatch, store.getState);
+            getYourAssignedPrs()(store.dispatch, store.getState);
+            getYourAssignedIssues()(store.dispatch, store.getState);
         }
     };
 }

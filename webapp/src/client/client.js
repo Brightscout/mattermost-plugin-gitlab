@@ -14,7 +14,7 @@ export default class Client {
         return this.doGet(`${this.url}/reviews`);
     };
 
-    getYourPrs = async () => {
+    getYourAssignedPrs = async () => {
         return this.doGet(`${this.url}/yourassignedprs`);
     };
 
@@ -22,7 +22,7 @@ export default class Client {
         return this.doPost(`${this.url}/prdetails`, prList);
     }
 
-    getYourAssignments = async () => {
+    getYourAssignedIssues = async () => {
         return this.doGet(`${this.url}/yourassignedissues`);
     };
 

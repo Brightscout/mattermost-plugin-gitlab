@@ -15,16 +15,16 @@ export default class SidebarButtons extends React.PureComponent {
         gitlabURL: PropTypes.string,
         reviews: PropTypes.arrayOf(PropTypes.object),
         todos: PropTypes.arrayOf(PropTypes.object),
-        yourPrs: PropTypes.arrayOf(PropTypes.object),
-        yourAssignments: PropTypes.arrayOf(PropTypes.object),
+        yourAssignedPrs: PropTypes.arrayOf(PropTypes.object),
+        yourAssignedIssues: PropTypes.arrayOf(PropTypes.object),
         isTeamSidebar: PropTypes.bool,
         pluginServerRoute: PropTypes.string.isRequired,
         showRHSPlugin: PropTypes.func.isRequired,
         actions: PropTypes.shape({
             getReviews: PropTypes.func.isRequired,
             getTodos: PropTypes.func.isRequired,
-            getYourPrs: PropTypes.func.isRequired,
-            getYourAssignments: PropTypes.func.isRequired,
+            getYourAssignedPrs: PropTypes.func.isRequired,
+            getYourAssignedIssues: PropTypes.func.isRequired,
             updateRHSState: PropTypes.func.isRequired,
         }).isRequired,
     };
@@ -62,8 +62,8 @@ export default class SidebarButtons extends React.PureComponent {
         await Promise.all([
             this.props.actions.getReviews(),
             this.props.actions.getTodos(),
-            this.props.actions.getYourPrs(),
-            this.props.actions.getYourAssignments(),
+            this.props.actions.getYourAssignedPrs(),
+            this.props.actions.getYourAssignedIssues(),
         ]);
         this.setState({refreshing: false});
     };
@@ -114,9 +114,9 @@ export default class SidebarButtons extends React.PureComponent {
 
         const baseURL = this.props.gitlabURL || 'https://gitlab.com';
         const reviews = this.props.reviews || [];
-        const yourPrs = this.props.yourPrs || [];
+        const yourAssignedPrs = this.props.yourAssignedPrs || [];
         const todos = this.props.todos || [];
-        const yourAssignments = this.props.yourAssignments || [];
+        const yourAssignedIssues = this.props.yourAssignedIssues || [];
         const refreshClass = this.state.refreshing ? ' fa-spin' : '';
 
         return (
@@ -131,16 +131,16 @@ export default class SidebarButtons extends React.PureComponent {
                     <i className='fa fa-gitlab fa-lg'/>
                 </a>
                 <OverlayTrigger
-                    key='gitlabYourPrsLink'
+                    key='gitlabYourAssignedPrsLink'
                     placement={placement}
-                    overlay={<Tooltip id='yourPrsTooltip'>{'Merge requests assigned'}</Tooltip>}
+                    overlay={<Tooltip id='yourAssignedPrsTooltip'>{'Merge requests assigned'}</Tooltip>}
                 >
                     <a
                         onClick={() => this.openRHS(RHSStates.PRS)}
                         style={button}
                     >
                         <i className='fa fa-compress'/>
-                        {' ' + yourPrs.length}
+                        {' ' + yourAssignedPrs.length}
                     </a>
                 </OverlayTrigger>
                 <OverlayTrigger
@@ -157,16 +157,16 @@ export default class SidebarButtons extends React.PureComponent {
                     </a>
                 </OverlayTrigger>
                 <OverlayTrigger
-                    key='gitlabAssignmentsLink'
+                    key='gitlabIssuesLink'
                     placement={placement}
-                    overlay={<Tooltip id='reviewTooltip'>{'Issues'}</Tooltip>}
+                    overlay={<Tooltip id='issuesTooltip'>{'Issues'}</Tooltip>}
                 >
                     <a
-                        onClick={() => this.openRHS(RHSStates.ASSIGNMENTS)}
+                        onClick={() => this.openRHS(RHSStates.ISSUES)}
                         style={button}
                     >
                         <i className='fa fa-list-ol'/>
-                        {' ' + yourAssignments.length}
+                        {' ' + yourAssignedIssues.length}
                     </a>
                 </OverlayTrigger>
                 <OverlayTrigger

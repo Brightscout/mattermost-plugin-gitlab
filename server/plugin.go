@@ -647,25 +647,25 @@ func (p *Plugin) GetToDo(ctx context.Context, user *gitlab.UserInfo) (bool, stri
 
 	assignmentText := ""
 	g.Go(func() error {
-		var yourAssignments []*gitlab.Issue
+		var yourAssignedIssues []*gitlab.Issue
 		err := p.useGitlabClient(user, func(info *gitlab.UserInfo, token *oauth2.Token) error {
 			resp, err := p.GitlabClient.GetYourAssignedIssues(ctx, info, token)
 			if err != nil {
 				return err
 			}
-			yourAssignments = resp
+			yourAssignedIssues = resp
 			return nil
 		})
 		if err != nil {
 			return err
 		}
 
-		if len(yourAssignments) == 0 {
+		if len(yourAssignedIssues) == 0 {
 			assignmentText += "You don't have any issues awaiting your dev.\n"
 		} else {
-			assignmentText += fmt.Sprintf("You have %v issues awaiting dev:\n", len(yourAssignments))
+			assignmentText += fmt.Sprintf("You have %v issues awaiting dev:\n", len(yourAssignedIssues))
 
-			for _, pr := range yourAssignments {
+			for _, pr := range yourAssignedIssues {
 				assignmentText += fmt.Sprintf("* [%v](%v)\n", pr.Title, pr.WebURL)
 			}
 

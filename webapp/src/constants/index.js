@@ -8,5 +8,5 @@ export const RHSStates = {
     PRS: 'pullRequests',
     REVIEWS: 'reviews',
     TODOS: 'todos',
-    ASSIGNMENTS: 'assignments',
+    ISSUES: 'issues',
 };
