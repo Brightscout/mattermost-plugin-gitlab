@@ -604,9 +604,9 @@ func (p *Plugin) GetToDo(ctx context.Context, user *gitlab.UserInfo) (bool, stri
 		}
 
 		if notificationCount == 0 {
-			notificationText += "You don't have any unread messages.\n"
+			notificationText += "You don't have any todos.\n"
 		} else {
-			notificationText += fmt.Sprintf("You have %v unread messages:\n", notificationCount)
+			notificationText += fmt.Sprintf("You have %v todos:\n", notificationCount)
 			notificationText += notificationContent
 
 			hasTodo = true
@@ -691,9 +691,9 @@ func (p *Plugin) GetToDo(ctx context.Context, user *gitlab.UserInfo) (bool, stri
 		}
 
 		if len(mergeRequests) == 0 {
-			mergeRequestText += "You don't have any open merge requests.\n"
+			mergeRequestText += "You don't have any merge requests assigned.\n"
 		} else {
-			mergeRequestText += fmt.Sprintf("You have %v open merge requests:\n", len(mergeRequests))
+			mergeRequestText += fmt.Sprintf("You have %v merge requests assigned:\n", len(mergeRequests))
 
 			for _, pr := range mergeRequests {
 				mergeRequestText += fmt.Sprintf("* [%v](%v)\n", pr.Title, pr.WebURL)
