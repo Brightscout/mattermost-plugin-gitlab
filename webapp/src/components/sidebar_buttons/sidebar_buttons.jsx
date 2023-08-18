@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import {makeStyleFromTheme, changeOpacity} from 'mattermost-redux/utils/theme_utils';
 
 import {RHSStates} from 'src/constants';
+import { GitLabIssuesIcon, GitLabMergeRequestIcon, GitLabReviewsIcon, GitLabTodosIcon } from './button_icons';
 
 export default class SidebarButtons extends React.PureComponent {
     static propTypes = {
@@ -139,8 +140,8 @@ export default class SidebarButtons extends React.PureComponent {
                         onClick={() => this.openRHS(RHSStates.PRS)}
                         style={button}
                     >
-                        <i className='fa fa-compress'/>
-                        {' ' + yourAssignedPrs.length}
+                        <GitLabMergeRequestIcon fill={changeOpacity(this.props.theme.sidebarText, 0.6)}/>
+                    <span style={style.buttonCount}>{yourAssignedPrs.length}</span>
                     </a>
                 </OverlayTrigger>
                 <OverlayTrigger
@@ -152,8 +153,8 @@ export default class SidebarButtons extends React.PureComponent {
                         onClick={() => this.openRHS(RHSStates.REVIEWS)}
                         style={button}
                     >
-                        <i className='fa fa-code-fork'/>
-                        {' ' + reviews.length}
+                    <GitLabReviewsIcon fill={changeOpacity(this.props.theme.sidebarText, 0.6)}/>
+                    <span style={style.buttonCount}>{reviews.length}</span>
                     </a>
                 </OverlayTrigger>
                 <OverlayTrigger
@@ -165,8 +166,8 @@ export default class SidebarButtons extends React.PureComponent {
                         onClick={() => this.openRHS(RHSStates.ISSUES)}
                         style={button}
                     >
-                        <i className='fa fa-list-ol'/>
-                        {' ' + yourAssignedIssues.length}
+                        <GitLabIssuesIcon fill={changeOpacity(this.props.theme.sidebarText, 0.6)}/>
+                        <span style={style.buttonCount}>{yourAssignedIssues.length}</span>
                     </a>
                 </OverlayTrigger>
                 <OverlayTrigger
@@ -178,8 +179,8 @@ export default class SidebarButtons extends React.PureComponent {
                         onClick={() => this.openRHS(RHSStates.TODOS)}
                         style={button}
                     >
-                        <i className='fa fa-envelope'/>
-                        {' ' + todos.length}
+                        <GitLabTodosIcon fill={changeOpacity(this.props.theme.sidebarText, 0.6)}/>
+                        <span style={style.buttonCount}>{todos.length}</span>
                     </a>
                 </OverlayTrigger>
                 <OverlayTrigger
@@ -212,6 +213,11 @@ const getStyle = makeStyleFromTheme((theme) => {
             color: changeOpacity(theme.sidebarText, 0.6),
             textAlign: 'center',
             cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+        },
+        buttonCount: {
+            marginLeft: '2px',
         },
         containerHeader: {
             marginTop: '10px',
