@@ -4,7 +4,8 @@ import PropTypes from 'prop-types';
 import {makeStyleFromTheme, changeOpacity} from 'mattermost-redux/utils/theme_utils';
 
 import {RHSStates} from 'src/constants';
-import { GitLabIssuesIcon, GitLabMergeRequestIcon, GitLabReviewsIcon, GitLabTodosIcon } from './button_icons';
+
+import {GitLabIssuesIcon, GitLabMergeRequestIcon, GitLabReviewsIcon, GitLabTodosIcon} from './button_icons';
 
 export default class SidebarButtons extends React.PureComponent {
     static propTypes = {
@@ -141,7 +142,7 @@ export default class SidebarButtons extends React.PureComponent {
                         style={button}
                     >
                         <GitLabMergeRequestIcon fill={changeOpacity(this.props.theme.sidebarText, 0.6)}/>
-                    <span style={style.buttonCount}>{yourAssignedPrs.length}</span>
+                        <span style={style.buttonCount}>{yourAssignedPrs.length}</span>
                     </a>
                 </OverlayTrigger>
                 <OverlayTrigger
@@ -153,8 +154,8 @@ export default class SidebarButtons extends React.PureComponent {
                         onClick={() => this.openRHS(RHSStates.REVIEWS)}
                         style={button}
                     >
-                    <GitLabReviewsIcon fill={changeOpacity(this.props.theme.sidebarText, 0.6)}/>
-                    <span style={style.buttonCount}>{reviews.length}</span>
+                        <GitLabReviewsIcon fill={changeOpacity(this.props.theme.sidebarText, 0.6)}/>
+                        <span style={style.buttonCount}>{reviews.length}</span>
                     </a>
                 </OverlayTrigger>
                 <OverlayTrigger
