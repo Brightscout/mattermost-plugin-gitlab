@@ -88,7 +88,6 @@ func (p *Plugin) handleWebhook(w http.ResponseWriter, r *http.Request) {
 	var errHandler error
 	fromUser := ""
 
-	fmt.Printf("\n main event %+v=", event)
 	switch event := event.(type) {
 	case *gitlabLib.MergeEvent:
 		repoPrivate = event.Project.Visibility == gitlabLib.PrivateVisibility
