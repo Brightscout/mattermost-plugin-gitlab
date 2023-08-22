@@ -15,7 +15,7 @@ export default class Client {
     };
 
     getYourAssignedPrs = async () => {
-        return this.doGet(`${this.url}/yourassignedprs`);
+        return this.doGet(`${this.url}/assignedprs`);
     };
 
     getPrsDetails = async (prList) => {
@@ -23,7 +23,7 @@ export default class Client {
     }
 
     getYourAssignedIssues = async () => {
-        return this.doGet(`${this.url}/yourassignedissues`);
+        return this.doGet(`${this.url}/assignedissues`);
     };
 
     getMentions = async () => {

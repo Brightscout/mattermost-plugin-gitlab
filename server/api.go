@@ -56,9 +56,9 @@ func (p *Plugin) initializeAPI() {
 	apiRouter.HandleFunc("/user", p.checkAuth(p.attachContext(p.getGitlabUser), ResponseTypeJSON)).Methods(http.MethodPost)
 	apiRouter.HandleFunc("/todo", p.checkAuth(p.attachUserContext(p.postToDo), ResponseTypeJSON)).Methods(http.MethodPost)
 	apiRouter.HandleFunc("/reviews", p.checkAuth(p.attachUserContext(p.getReviews), ResponseTypePlain)).Methods(http.MethodGet)
-	apiRouter.HandleFunc("/yourassignedprs", p.checkAuth(p.attachUserContext(p.getYourAssignedPrs), ResponseTypePlain)).Methods(http.MethodGet)
+	apiRouter.HandleFunc("/assignedprs", p.checkAuth(p.attachUserContext(p.getYourAssignedPrs), ResponseTypePlain)).Methods(http.MethodGet)
 	apiRouter.HandleFunc("/prdetails", p.checkAuth(p.attachUserContext(p.getPrDetails), ResponseTypePlain)).Methods(http.MethodPost)
-	apiRouter.HandleFunc("/yourassignedissues", p.checkAuth(p.attachUserContext(p.getYourAssignedIssues), ResponseTypePlain)).Methods(http.MethodGet)
+	apiRouter.HandleFunc("/assignedissues", p.checkAuth(p.attachUserContext(p.getYourAssignedIssues), ResponseTypePlain)).Methods(http.MethodGet)
 	apiRouter.HandleFunc("/todolist", p.checkAuth(p.attachUserContext(p.getToDoList), ResponseTypePlain)).Methods(http.MethodGet)
 	apiRouter.HandleFunc("/settings", p.checkAuth(p.attachUserContext(p.updateSettings), ResponseTypePlain)).Methods(http.MethodPost)
 
