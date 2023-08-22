@@ -28,7 +28,6 @@ func (w *webhook) handleDMMergeRequest(event *gitlab.MergeEvent) ([]*HandleWebho
 		toUsers = append(toUsers, w.gitlabRetreiver.GetUsernameByID(assigneeID))
 	}
 
-	fmt.Printf("\n handleDMMergeRequest %+v", event)
 	message := ""
 
 	switch event.ObjectAttributes.State {
