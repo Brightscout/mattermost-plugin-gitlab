@@ -282,14 +282,61 @@ func (g *gitlab) GetProject(ctx context.Context, user *UserInfo, token *oauth2.T
 	return project, nil
 }
 
-func (g *gitlab) GetReviews(ctx context.Context, user *UserInfo, token *oauth2.Token) ([]*MergeRequest, error) {
+type SidebarContent struct {
+	PRs         []*MergeRequest      `json:"prs"`
+	Reviews     []*MergeRequest      `json:"reviews"`
+	Assignments []*Issue             `json:"assignments"`
+	Unreads     []*internGitlab.Todo `json:"unreads"`
+}
+
+func (g *gitlab) GetLHSData(ctx context.Context, user *UserInfo, token *oauth2.Token) (*SidebarContent, error) {
 	client, err := g.GitlabConnect(*token)
 	if err != nil {
 		return nil, err
 	}
 
+	grp, ctx := errgroup.WithContext(ctx)
+
+	var reviews []*MergeRequest
+	grp.Go(func() error {
+		reviews, err = g.GetReviews(ctx, user, client)
+		return err
+	})
+
+	var assignments []*Issue
+	grp.Go(func() error {
+		assignments, err = g.GetYourAssignments(ctx, user, client)
+		return err
+	})
+
+	var mergeRequests []*MergeRequest
+	grp.Go(func() error {
+		mergeRequests, err = g.GetYourPrs(ctx, user, client)
+		return err
+	})
+
+	var unreads []*internGitlab.Todo
+	grp.Go(func() error {
+		unreads, err = g.GetUnreads(ctx, user, client)
+		return err
+	})
+
+	if err := grp.Wait(); err != nil {
+		return nil, err
+	}
+
+	return &SidebarContent{
+		Reviews:     reviews,
+		PRs:         mergeRequests,
+		Assignments: assignments,
+		Unreads:     unreads,
+	}, nil
+}
+
+func (g *gitlab) GetReviews(ctx context.Context, user *UserInfo, client *internGitlab.Client) ([]*MergeRequest, error) {
 	opened := stateOpened
 	scope := scopeAll
+	var err error
 
 	var mrs []*internGitlab.MergeRequest
 	if g.gitlabGroup == "" {
@@ -353,14 +400,10 @@ func (g *gitlab) GetReviews(ctx context.Context, user *UserInfo, token *oauth2.T
 	return mergeRequests, err
 }
 
-func (g *gitlab) GetYourPrs(ctx context.Context, user *UserInfo, token *oauth2.Token) ([]*MergeRequest, error) {
-	client, err := g.GitlabConnect(*token)
-	if err != nil {
-		return nil, err
-	}
-
+func (g *gitlab) GetYourPrs(ctx context.Context, user *UserInfo, client *internGitlab.Client) ([]*MergeRequest, error) {
 	opened := stateOpened
 	scope := scopeAll
+	var err error
 
 	var mrs []*internGitlab.MergeRequest
 
@@ -518,14 +561,10 @@ func (g *gitlab) fetchYourPrDetails(c context.Context, log logger.Logger, client
 	return nil
 }
 
-func (g *gitlab) GetYourAssignments(ctx context.Context, user *UserInfo, token *oauth2.Token) ([]*Issue, error) {
-	client, err := g.GitlabConnect(*token)
-	if err != nil {
-		return nil, err
-	}
+func (g *gitlab) GetYourAssignments(ctx context.Context, user *UserInfo, client *internGitlab.Client) ([]*Issue, error) {
 	opened := stateOpened
 	scope := scopeAll
-
+	var err error
 	var issues []*internGitlab.Issue
 
 	if g.gitlabGroup == "" {
@@ -588,13 +627,10 @@ func (g *gitlab) GetYourAssignments(ctx context.Context, user *UserInfo, token *
 	return result, nil
 }
 
-func (g *gitlab) GetUnreads(ctx context.Context, user *UserInfo, token *oauth2.Token) ([]*internGitlab.Todo, error) {
-	client, err := g.GitlabConnect(*token)
-	if err != nil {
-		return nil, err
-	}
-
+func (g *gitlab) GetUnreads(ctx context.Context, user *UserInfo, client *internGitlab.Client) ([]*internGitlab.Todo, error) {
 	var todos []*internGitlab.Todo
+	var err error
+
 	opt := &internGitlab.ListTodosOptions{
 		ListOptions: internGitlab.ListOptions{Page: 1, PerPage: perPage},
 	}
