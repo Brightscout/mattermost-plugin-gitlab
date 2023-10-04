@@ -282,14 +282,14 @@ func (g *gitlab) GetProject(ctx context.Context, user *UserInfo, token *oauth2.T
 	return project, nil
 }
 
-type SidebarContent struct {
+type LHSContent struct {
 	PRs         []*MergeRequest      `json:"prs"`
 	Reviews     []*MergeRequest      `json:"reviews"`
 	Assignments []*Issue             `json:"assignments"`
 	Unreads     []*internGitlab.Todo `json:"unreads"`
 }
 
-func (g *gitlab) GetLHSData(ctx context.Context, user *UserInfo, token *oauth2.Token) (*SidebarContent, error) {
+func (g *gitlab) GetLHSData(ctx context.Context, user *UserInfo, token *oauth2.Token) (*LHSContent, error) {
 	client, err := g.GitlabConnect(*token)
 	if err != nil {
 		return nil, err
@@ -325,7 +325,7 @@ func (g *gitlab) GetLHSData(ctx context.Context, user *UserInfo, token *oauth2.T
 		return nil, err
 	}
 
-	return &SidebarContent{
+	return &LHSContent{
 		Reviews:     reviews,
 		PRs:         mergeRequests,
 		Assignments: assignments,
@@ -336,7 +336,6 @@ func (g *gitlab) GetLHSData(ctx context.Context, user *UserInfo, token *oauth2.T
 func (g *gitlab) GetReviews(ctx context.Context, user *UserInfo, client *internGitlab.Client) ([]*MergeRequest, error) {
 	opened := stateOpened
 	scope := scopeAll
-	var err error
 
 	var mrs []*internGitlab.MergeRequest
 	if g.gitlabGroup == "" {
@@ -349,7 +348,7 @@ func (g *gitlab) GetReviews(ctx context.Context, user *UserInfo, client *internG
 		for {
 			var current []*internGitlab.MergeRequest
 			var resp *internGitlab.Response
-			current, resp, err = client.MergeRequests.ListMergeRequests(opt)
+			current, resp, err := client.MergeRequests.ListMergeRequests(opt)
 			if err != nil {
 				return nil, err
 			}
@@ -369,7 +368,7 @@ func (g *gitlab) GetReviews(ctx context.Context, user *UserInfo, client *internG
 		for {
 			var current []*internGitlab.MergeRequest
 			var resp *internGitlab.Response
-			current, resp, err = client.MergeRequests.ListGroupMergeRequests(g.gitlabGroup, opt)
+			current, resp, err := client.MergeRequests.ListGroupMergeRequests(g.gitlabGroup, opt)
 			if err != nil {
 				return nil, err
 			}
@@ -385,7 +384,7 @@ func (g *gitlab) GetReviews(ctx context.Context, user *UserInfo, client *internG
 	for _, mr := range mrs {
 		if mr.Labels != nil {
 			var labelsWithDetails []*internGitlab.Label
-			labelsWithDetails, err = g.GetLabelDetails(client, mr.ProjectID, mr.Labels)
+			labelsWithDetails, err := g.GetLabelDetails(client, mr.ProjectID, mr.Labels)
 			if err != nil {
 				return nil, err
 			}
@@ -397,16 +396,13 @@ func (g *gitlab) GetReviews(ctx context.Context, user *UserInfo, client *internG
 		}
 	}
 
-	return mergeRequests, err
+	return mergeRequests, nil
 }
 
 func (g *gitlab) GetYourPrs(ctx context.Context, user *UserInfo, client *internGitlab.Client) ([]*MergeRequest, error) {
 	opened := stateOpened
 	scope := scopeAll
-	var err error
-
 	var mrs []*internGitlab.MergeRequest
-
 	if g.gitlabGroup == "" {
 		opt := &internGitlab.ListMergeRequestsOptions{
 			AuthorID:    &user.GitlabUserID,
@@ -417,7 +413,7 @@ func (g *gitlab) GetYourPrs(ctx context.Context, user *UserInfo, client *internG
 		for {
 			var current []*internGitlab.MergeRequest
 			var resp *internGitlab.Response
-			current, resp, err = client.MergeRequests.ListMergeRequests(opt)
+			current, resp, err := client.MergeRequests.ListMergeRequests(opt)
 			if err != nil {
 				return nil, err
 			}
@@ -437,7 +433,7 @@ func (g *gitlab) GetYourPrs(ctx context.Context, user *UserInfo, client *internG
 		for {
 			var current []*internGitlab.MergeRequest
 			var resp *internGitlab.Response
-			current, resp, err = client.MergeRequests.ListGroupMergeRequests(g.gitlabGroup, opt)
+			current, resp, err := client.MergeRequests.ListGroupMergeRequests(g.gitlabGroup, opt)
 			if err != nil {
 				return nil, err
 			}
@@ -453,7 +449,7 @@ func (g *gitlab) GetYourPrs(ctx context.Context, user *UserInfo, client *internG
 	for _, mr := range mrs {
 		if mr.Labels != nil {
 			var labelsWithDetails []*internGitlab.Label
-			labelsWithDetails, err = g.GetLabelDetails(client, mr.ProjectID, mr.Labels)
+			labelsWithDetails, err := g.GetLabelDetails(client, mr.ProjectID, mr.Labels)
 			if err != nil {
 				return nil, err
 			}
@@ -564,7 +560,6 @@ func (g *gitlab) fetchYourPrDetails(c context.Context, log logger.Logger, client
 func (g *gitlab) GetYourAssignments(ctx context.Context, user *UserInfo, client *internGitlab.Client) ([]*Issue, error) {
 	opened := stateOpened
 	scope := scopeAll
-	var err error
 	var issues []*internGitlab.Issue
 
 	if g.gitlabGroup == "" {
@@ -577,7 +572,7 @@ func (g *gitlab) GetYourAssignments(ctx context.Context, user *UserInfo, client 
 		for {
 			var current []*internGitlab.Issue
 			var resp *internGitlab.Response
-			current, resp, err = client.Issues.ListIssues(opt)
+			current, resp, err := client.Issues.ListIssues(opt)
 			if err != nil {
 				return nil, err
 			}
@@ -597,7 +592,7 @@ func (g *gitlab) GetYourAssignments(ctx context.Context, user *UserInfo, client 
 		for {
 			var current []*internGitlab.Issue
 			var resp *internGitlab.Response
-			current, resp, err = client.Issues.ListGroupIssues(g.gitlabGroup, opt)
+			current, resp, err := client.Issues.ListGroupIssues(g.gitlabGroup, opt)
 			if err != nil {
 				return nil, err
 			}
@@ -613,7 +608,7 @@ func (g *gitlab) GetYourAssignments(ctx context.Context, user *UserInfo, client 
 	for _, issue := range issues {
 		if issue.Labels != nil {
 			var labelsWithDetails []*internGitlab.Label
-			labelsWithDetails, err = g.GetLabelDetails(client, issue.ProjectID, issue.Labels)
+			labelsWithDetails, err := g.GetLabelDetails(client, issue.ProjectID, issue.Labels)
 			if err != nil {
 				return nil, err
 			}
@@ -629,7 +624,6 @@ func (g *gitlab) GetYourAssignments(ctx context.Context, user *UserInfo, client 
 
 func (g *gitlab) GetUnreads(ctx context.Context, user *UserInfo, client *internGitlab.Client) ([]*internGitlab.Todo, error) {
 	var todos []*internGitlab.Todo
-	var err error
 
 	opt := &internGitlab.ListTodosOptions{
 		ListOptions: internGitlab.ListOptions{Page: 1, PerPage: perPage},
@@ -637,7 +631,7 @@ func (g *gitlab) GetUnreads(ctx context.Context, user *UserInfo, client *internG
 	for {
 		var current []*internGitlab.Todo
 		var resp *internGitlab.Response
-		current, resp, err = client.Todos.ListTodos(opt)
+		current, resp, err := client.Todos.ListTodos(opt)
 		if err != nil {
 			return nil, errors.Wrap(err, "can't list todo in GitLab api")
 		}

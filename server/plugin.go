@@ -24,7 +24,6 @@ import (
 	"github.com/pkg/errors"
 	gitlabLib "github.com/xanzy/go-gitlab"
 	"golang.org/x/oauth2"
-	"golang.org/x/sync/errgroup"
 
 	root "github.com/mattermost/mattermost-plugin-gitlab"
 	"github.com/mattermost/mattermost-plugin-gitlab/server/gitlab"
@@ -577,7 +576,6 @@ func (p *Plugin) PostToDo(ctx context.Context, info *gitlab.UserInfo) {
 
 func (p *Plugin) GetToDo(ctx context.Context, user *gitlab.UserInfo) (bool, string, error) {
 	hasTodo := false
-	g, ctx := errgroup.WithContext(ctx)
 
 	var notificationText, reviewText, assignmentText, mergeRequestText string
 	err := p.useGitlabClient(user, func(info *gitlab.UserInfo, token *oauth2.Token) error {
@@ -649,10 +647,6 @@ func (p *Plugin) GetToDo(ctx context.Context, user *gitlab.UserInfo) (bool, stri
 			}
 
 			hasTodo = true
-		}
-
-		if err := g.Wait(); err != nil {
-			return err
 		}
 
 		return nil
