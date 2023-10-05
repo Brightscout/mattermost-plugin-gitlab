@@ -20,13 +20,14 @@ export const notificationReasons: Record<string | symbol, string> = {
     approval_required: 'Your approval is required on this issue/merge request.',
     unmergeable: 'This merge request can\'t be merged.',
     merge_train_removed: 'A merge train was removed.',
-    member_access_requested: 'reqested access to a project/group.'
+    member_access_requested: 'requested access to a project/group.'
 };
 
 const SUCCESS = 'success';
 const PENDING = 'pending';
+const ActionNameMemberAccessRequested = 'member_access_requested'
 
-function GitlabItems({item, theme}: GitlabItemsProps) {    
+function GitlabItems({item, theme}: GitlabItemsProps) {
     const style = getStyle(theme);
 
     const repoName = item.references?.full || item.project?.path_with_namespace || '';
@@ -192,7 +193,7 @@ function GitlabItems({item, theme}: GitlabItemsProps) {
                 {item.action_name && (
                     <>
                         <div>{item.updated_at && `Updated ${formatTimeSince(item.updated_at)} ago.`}</div>
-                        {item.action_name=='member_access_requested' && <a href={item.author.web_url}>{item.author.name}</a>} {notificationReasons[item.action_name]}
+                        {item.action_name==ActionNameMemberAccessRequested && <a href={item.author.web_url}>{item.author.name}</a>} {notificationReasons[item.action_name]}
                     </>
                 )}
             </div>
