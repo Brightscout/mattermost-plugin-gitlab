@@ -25,7 +25,7 @@ export const notificationReasons: Record<string | symbol, string> = {
 
 const SUCCESS = 'success';
 const PENDING = 'pending';
-const ActionNameMemberAccessRequested = 'member_access_requested';
+const ACTION_NAME_MEMBER_ACCESS_REQUESTED = 'member_access_requested';
 
 function GitlabItems({item, theme}: GitlabItemsProps) {
     const style = getStyle(theme);
@@ -193,7 +193,7 @@ function GitlabItems({item, theme}: GitlabItemsProps) {
                 {item.action_name && (
                     <>
                         <div>{item.updated_at && `Updated ${formatTimeSince(item.updated_at)} ago.`}</div>
-                        {item.action_name==ActionNameMemberAccessRequested && <a href={item.author.web_url}>{item.author.name}</a>} {notificationReasons[item.action_name]}
+                        {item.action_name == ACTION_NAME_MEMBER_ACCESS_REQUESTED && <a href={item.author.web_url}>{item.author.name}</a>} {notificationReasons[item.action_name]}
                     </>
                 )}
             </div>
