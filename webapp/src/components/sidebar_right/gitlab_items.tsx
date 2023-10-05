@@ -25,7 +25,7 @@ export const notificationReasons: Record<string | symbol, string> = {
 
 const SUCCESS = 'success';
 const PENDING = 'pending';
-const ActionNameMemberAccessRequested = 'member_access_requested'
+const ActionNameMemberAccessRequested = 'member_access_requested';
 
 function GitlabItems({item, theme}: GitlabItemsProps) {
     const style = getStyle(theme);
