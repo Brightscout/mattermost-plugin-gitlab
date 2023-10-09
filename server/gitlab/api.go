@@ -40,6 +40,13 @@ type Issue struct {
 	LabelsWithDetails []*internGitlab.Label `json:"labels_with_details,omitempty"`
 }
 
+type LHSContent struct {
+	PRs         []*MergeRequest      `json:"prs"`
+	Reviews     []*MergeRequest      `json:"reviews"`
+	Assignments []*Issue             `json:"assignments"`
+	Unreads     []*internGitlab.Todo `json:"unreads"`
+}
+
 // NewGroupHook creates a webhook associated with a GitLab group
 func (g *gitlab) NewGroupHook(ctx context.Context, user *UserInfo, token *oauth2.Token, groupName string, webhookOptions *AddWebhookOptions) (*WebhookInfo, error) {
 	client, err := g.GitlabConnect(*token)
@@ -280,13 +287,6 @@ func (g *gitlab) GetProject(ctx context.Context, user *UserInfo, token *oauth2.T
 	}
 
 	return project, nil
-}
-
-type LHSContent struct {
-	PRs         []*MergeRequest      `json:"prs"`
-	Reviews     []*MergeRequest      `json:"reviews"`
-	Assignments []*Issue             `json:"assignments"`
-	Unreads     []*internGitlab.Todo `json:"unreads"`
 }
 
 func (g *gitlab) GetLHSData(ctx context.Context, user *UserInfo, token *oauth2.Token) (*LHSContent, error) {
