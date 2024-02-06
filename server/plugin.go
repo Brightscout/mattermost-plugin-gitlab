@@ -868,7 +868,7 @@ func (p *Plugin) handleRevokedToken(info *gitlab.UserInfo) {
 	err := p.CreateBotDMPost(info.UserID, "Your GitLab account was disconnected due to an invalid or revoked authorization token. Reconnect your account using the `/gitlab connect` command.", "custom_git_revoked_token")
 
 	if err != nil {
-		p.client.Log.Warn("Error sending revoked token DM post", "err", err.Error())
+		p.client.Log.Warn("Error sending revoked token DM post", "err", err.Error()) 
 	}
 }
 
