@@ -14,8 +14,8 @@
 
 /* Gitlab Tooltip */
 .gitlab-tooltip .box {
-    background-color: white;
-    box-shadow: 0 1px 15px rgba(27,31,35,.15);
+    background-color: var(--center-channel-bg);
+    box-shadow: 0 1px 10px rgba(var(--center-channel-color-rgb), 0.2);
     position: relative;
     width: 360px;
 }
@@ -27,13 +27,14 @@
 
 /* Header */
 .gitlab-tooltip .header {
-    color: var(--light-gray);
+    color: var(--center-channel-color);
     font-size: 12px;
+    opacity: 0.7;
 }
 
 .gitlab-tooltip .header a {
     text-decoration: none;
-    color: var(--gray);
+    color: var(--center-channel-color);
     display: inline-block;
 }
 
@@ -52,11 +53,12 @@
 .gitlab-tooltip .tooltip-info > a, .gitlab-tooltip .tooltip-info > a:hover {
     display: block;
     text-decoration: none;
-    color: var(--dark-gray);
+    color: var(--center-channel-color);
 }
 
 .mr-number {
-    color: var(--light-gray);
+    color: var(--center-channel-color);
+    opacity: 0.7;
 }
 
 .gitlab-tooltip .tooltip-info h5 {
@@ -66,6 +68,7 @@
 }
 
 .gitlab-tooltip .tooltip-info .markdown-text {
+    color: var(--center-channel-color);
     -webkit-hyphens: auto;
     -ms-hyphens: auto;
     hyphens: auto;
@@ -78,11 +81,6 @@
 
 .gitlab-tooltip .tooltip-info .markdown-text::-webkit-scrollbar {
     display: none;
-}
-
-.gitlab-tooltip .see-more {
-    font-weight: 600;
-    font-size: 12px;
 }
 
 /* Labels */
@@ -116,9 +114,9 @@
     display: inline-block;
     padding: 0 5px;
     font: .75em/2 SFMono-Regular,Consolas,Liberation Mono,Menlo,monospace;
-    color: var(--blue);
+    color: var(--button-bg);
     white-space: nowrap;
-    background-color: var(--light-blue);
+    background-color: rgba(var(--button-bg-rgb), 0.1);
     border-radius: 3px;
     max-width: 140px;
     text-overflow: ellipsis;
