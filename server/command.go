@@ -86,8 +86,9 @@ const (
 	commandAdd    = "add"
 	commandDelete = "delete"
 	commandList   = "list"
+	commandRun    = "run"
 
-	commandRun = "run"
+	featurePipeline = "pipeline"
 )
 
 const (
@@ -742,6 +743,31 @@ func (p *Plugin) pipelineRunCommand(ctx context.Context, namespace, ref, channel
 	txt += fmt.Sprintf("**Ref**: %s\n", pipelineInfo.Ref)
 	txt += fmt.Sprintf("**Triggered By**: %s\n", pipelineInfo.User)
 	txt += fmt.Sprintf("**Visit pipeline [here](%s)** \n\n", pipelineInfo.WebURL)
+
+	subs, err := p.GetSubscriptionsByChannel(channelID)
+	if err != nil {
+		return err.Error()
+	}
+	if len(subs) == 0 {
+		txt += "###### Currently there are no subscriptions present in this channel\n"
+		txt += fmt.Sprintf("You can create a subscription for pipeline by running the command `/gitlab subscriptions add %s pipeline`", namespace)
+		return txt
+	}
+
+	var isPipelineSubscriptionPresent bool
+	subscriptionFeatures := featurePipeline
+	for _, sub := range subs {
+		if sub.Repository == namespace {
+			subscriptionFeatures = sub.Features + " ," + subscriptionFeatures
+			if sub.Features == featurePipeline {
+				isPipelineSubscriptionPresent = true
+			}
+		}
+	}
+	if !isPipelineSubscriptionPresent {
+		txt += "###### Currently there are no subscriptions for pipeline present in this channel\n"
+		txt += fmt.Sprintf("You can create a subscription for pipline by running the command `/gitlab subscriptions add %s %s`", namespace, subscriptionFeatures)
+	}
 	return txt
 }
 
